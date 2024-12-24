@@ -15,7 +15,7 @@ interface LoadedData {
   id: string;
   name: string;
   alias?: string;
-  display: string;
+  listDisplay: string;
 }
 
 @Component({
@@ -67,32 +67,33 @@ export class SearchAuthorComponent {
     if (this.searchQuery.length > 0) {
       this.loadPage(this.searchQuery);
     } else {
-
+      // TODO
     }
   }
 
   transformData(responseData: Author[], query: string) {
     return responseData.flatMap((author: Author) => {
-      const regExp = new RegExp(`${query}`, 'i');
-      if (regExp.test(author.name.sorting)) {
-        return {
+      const regExp = new RegExp(query, 'i');
+      const mainVariant = author.nameVariants
+        .find(nameVariant => nameVariant._id === author.mainVariantId);
+      if (mainVariant && regExp.test(mainVariant.display)) {
+        const mainVariantDisplay: LoadedData = {
           id: author._id,
-          name: author.name.sorting,
-          display: author.name.sorting,
+          name: mainVariant.display,
+          listDisplay: mainVariant.sorting,
         };
+        return [mainVariantDisplay];
       } else {
-        const filteredNameVariants = author.nameVariants.filter((nameVariant) => regExp.test(nameVariant.display));
-        if (filteredNameVariants.length) {
-          const firstVariant = filteredNameVariants[0];
+        return author.nameVariants.filter(nameVariant =>
+          regExp.test(nameVariant.display) && nameVariant._id !== author.mainVariantId,
+        ).map((nameVariant): LoadedData => {
           return {
             id: author._id,
-            name: author.name.sorting,
-            alias: firstVariant.display,
-            display: `${author.name.sorting} (as ${firstVariant.display})`,
+            name: mainVariant ? mainVariant.display : nameVariant.display,
+            alias: mainVariant ? nameVariant.display : undefined,
+            listDisplay: mainVariant ? `${mainVariant.sorting} (${nameVariant.display})` : nameVariant.sorting,
           };
-        } else {
-          return [];
-        }
+        });
       }
     });
   }
@@ -102,7 +103,7 @@ export class SearchAuthorComponent {
       this.service.find(query, this.startFrom, this.pageSize).pipe(take(1)).subscribe((res) => {
         const responseData = res.data;
         this.startFrom += this.pageSize;
-        this.loadedData.update((previousData) => [...previousData, ...this.transformData(responseData, query)]);
+        this.loadedData.update(previousData => [...previousData, ...this.transformData(responseData, query)]);
         if (responseData.length < this.pageSize) {
           this.isLastPageEmpty = true;
         }

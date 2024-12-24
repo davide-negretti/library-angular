@@ -16,7 +16,7 @@
   </p-buttonGroup>
 
   <p-listbox [(ngModel)]="selectedAuthor" [options]="loadedData()"
-             optionLabel="display" [checkmark]="true" [highlightOnSelect]="false" />
+             optionLabel="listDisplay" [checkmark]="true" [highlightOnSelect]="false" />
 </div>
 
 <pre>{{ selectedAuthor | json }}</pre>
