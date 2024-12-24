@@ -1,9 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import Aura from '@primeng/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
+import PrimeNgPreset from './primeng-preset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        preset: Aura,
+        preset: PrimeNgPreset,
         options: {
           darkModeSelector: false,
         },
