@@ -1,0 +1,22 @@
+<div class="flex flex-col gap-3">
+  <p-floatlabel variant="in">
+    <input pInputText id="searchQuery" [(ngModel)]="searchQuery" (ngModelChange)="onSearchQueryChange()" />
+    <label for="searchQuery">Search author</label>
+  </p-floatlabel>
+
+  <p-buttonGroup>
+    <p-button label="Load more" icon="pi pi-spinner" severity="secondary"
+              [disabled]="searchQuery.length === 0 || isLastPageEmpty" (onClick)="onLoadMore()" />
+    <p-button label="Add new" icon="pi pi-plus-circle" severity="secondary"
+              pTooltip="Check if the author already exists before adding a new one"
+              tooltipPosition="bottom" [tooltipDisabled]="searchQuery.length > 0"
+              [disabled]="searchQuery.length === 0" (onClick)="onAddNew()" />
+    <p-button label="Select current" icon="pi pi-check-circle" severity="success"
+              [disabled]="!selectedAuthor" (onClick)="onSelectCurrent()" />
+  </p-buttonGroup>
+
+  <p-listbox [(ngModel)]="selectedAuthor" [options]="loadedData()"
+             optionLabel="display" [checkmark]="true" [highlightOnSelect]="false" />
+</div>
+
+<pre>{{ selectedAuthor | json }}</pre>
