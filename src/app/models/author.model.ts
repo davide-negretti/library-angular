@@ -1,10 +1,12 @@
-interface Name {
+export interface AuthorNameVariant {
   display: string;
   sorting: string;
+  type: string;
+  _id: string;
 }
 
 export interface Author {
-  name: Name;
-  nameVariants: Name[];
+  mainVariantId: string;
+  nameVariants: AuthorNameVariant[];
   _id: string;
 }
