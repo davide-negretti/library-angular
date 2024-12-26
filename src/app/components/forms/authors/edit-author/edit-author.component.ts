@@ -1,8 +1,9 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
+import { Dialog } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
@@ -18,11 +19,13 @@ import { AuthorService } from '../../../../services/rest/author.service';
     AsyncPipe,
     ButtonGroup,
     ButtonModule,
+    Dialog,
     InputTextModule,
     FormsModule,
     TableModule,
     Tag,
     Tooltip,
+    JsonPipe,
   ],
   templateUrl: './edit-author.component.html',
   styleUrl: './edit-author.component.scss',
@@ -35,6 +38,11 @@ export class EditAuthorComponent implements OnInit {
   mainVariantId = new BehaviorSubject<string | undefined>(undefined);
 
   nameVariants$ = this.nameVariants.asObservable();
+
+  showEditDialog = false;
+
+  editNameVariant: AuthorNameVariant | undefined;
+  isSavingNameVariant = false;
 
   readonly types = [
     'original', 'short', 'pseudonym',
@@ -81,5 +89,23 @@ export class EditAuthorComponent implements OnInit {
       },
       error: console.error,
     });
+  }
+
+  openEditDialog(nameVariant: AuthorNameVariant) {
+    this.editNameVariant = { ...nameVariant };
+    this.showEditDialog = true;
+  }
+
+  closeEditDialog() {
+    this.showEditDialog = false;
+  }
+
+  saveNameVariant() { // TODO
+    this.isSavingNameVariant = true;
+    setTimeout(() => {
+      this.cd.markForCheck();
+      this.isSavingNameVariant = false;
+      this.showEditDialog = false;
+    }, 1000);
   }
 }
