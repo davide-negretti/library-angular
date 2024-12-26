@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
-import { BehaviorSubject, take } from 'rxjs';
+import { Tooltip } from 'primeng/tooltip';
+import { BehaviorSubject, map, take, tap } from 'rxjs';
 import { AuthorNameVariant } from '../../../../models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
 
@@ -14,13 +15,14 @@ import { AuthorService } from '../../../../services/rest/author.service';
   selector: 'l-edit-author',
   standalone: true,
   imports: [
+    AsyncPipe,
     ButtonGroup,
     ButtonModule,
     InputTextModule,
     FormsModule,
     TableModule,
     Tag,
-    AsyncPipe,
+    Tooltip,
   ],
   templateUrl: './edit-author.component.html',
   styleUrl: './edit-author.component.scss',
@@ -39,6 +41,7 @@ export class EditAuthorComponent implements OnInit {
   ];
 
   private readonly service = inject(AuthorService);
+  private readonly cd = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.loadAllData();
@@ -58,6 +61,25 @@ export class EditAuthorComponent implements OnInit {
   }
 
   isMainVariant(variant: AuthorNameVariant) {
-    return variant._id === this.mainVariantId.getValue();
+    return this.mainVariantId.asObservable().pipe(
+      map(mainVariantId => mainVariantId === variant._id),
+    );
+  }
+
+  onSetMainVariant(variantId: string) {
+    this.service.setMainVariant(this.authorId, variantId).pipe(
+      take(1),
+      tap((res) => {
+        if (res.mainVariantId !== variantId) {
+          throw new Error('Unable to set main variant');
+        }
+      }),
+    ).subscribe({
+      next: (res) => {
+        // this.cd.markForCheck();
+        this.mainVariantId.next(res.mainVariantId);
+      },
+      error: console.error,
+    });
   }
 }

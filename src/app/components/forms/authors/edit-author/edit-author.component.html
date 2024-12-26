@@ -16,7 +16,7 @@
         {{ nameVariant.display }}
       </td>
       <td>
-        @if (isMainVariant(nameVariant)) {
+        @if (isMainVariant(nameVariant) | async) {
           <p-tag severity="success" icon="pi pi-bookmark" value="main" rounded />
         } @else {
           <p-tag severity="info" [value]="nameVariant.type" rounded />
@@ -26,9 +26,11 @@
         <p-buttonGroup>
           <p-button icon="pi pi-pencil" size="small" severity="secondary"></p-button>
           <p-button icon="pi pi-bookmark" size="small" severity="secondary"
-                    [disabled]="isMainVariant(nameVariant)"></p-button>
+                    (onClick)="onSetMainVariant(nameVariant._id)"
+                    [disabled]="isMainVariant(nameVariant) | async"></p-button>
           <p-button icon="pi pi-trash" size="small" severity="danger"
-                    [disabled]="isMainVariant(nameVariant)"></p-button>
+                    pTooltip="The main variant cannot be deleted" tooltipPosition="bottom"
+                    [disabled]="isMainVariant(nameVariant) | async"></p-button>
         </p-buttonGroup>
       </td>
     </tr>
