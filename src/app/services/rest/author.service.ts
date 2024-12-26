@@ -24,4 +24,11 @@ export class AuthorService {
     }
     return this.http.get<PaginatedResponse<Author>>('http://localhost:3000/authors/search', { params });
   }
+
+  setMainVariant(authorId: string, mainVariantId: string) {
+    const requestBody: Partial<Author> = {
+      mainVariantId: mainVariantId,
+    };
+    return this.http.put<Author>(`http://localhost:3000/authors/${authorId}/main-variant`, requestBody);
+  }
 }
