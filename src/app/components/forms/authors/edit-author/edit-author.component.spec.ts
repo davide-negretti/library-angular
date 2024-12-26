@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchAuthorComponent } from './search-author.component';
+import { EditAuthorComponent } from './edit-author.component';
 
-describe('SelectAuthorComponent', () => {
-  let component: SearchAuthorComponent;
-  let fixture: ComponentFixture<SearchAuthorComponent>;
+describe('ReviewAuthorComponent', () => {
+  let component: EditAuthorComponent;
+  let fixture: ComponentFixture<EditAuthorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchAuthorComponent],
+      imports: [EditAuthorComponent],
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(SearchAuthorComponent);
+    fixture = TestBed.createComponent(EditAuthorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
