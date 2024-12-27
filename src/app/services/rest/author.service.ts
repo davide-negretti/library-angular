@@ -34,4 +34,8 @@ export class AuthorService extends RestService {
     };
     return this.http.put<Author>(this.apiUrl([authorId, 'main-variant']), requestBody);
   }
+
+  deleteNameVariant(authorId: string, variantId: string) {
+    return this.http.delete(this.apiUrl([authorId, 'variants', variantId]));
+  }
 }

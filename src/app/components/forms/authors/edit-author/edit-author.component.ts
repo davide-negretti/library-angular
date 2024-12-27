@@ -1,8 +1,10 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Dialog } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -19,6 +21,7 @@ import { AuthorService } from '../../../../services/rest/author.service';
     AsyncPipe,
     ButtonGroup,
     ButtonModule,
+    ConfirmDialogModule,
     Dialog,
     InputTextModule,
     FormsModule,
@@ -33,6 +36,9 @@ import { AuthorService } from '../../../../services/rest/author.service';
 })
 export class EditAuthorComponent implements OnInit {
   @Input({ required: true }) authorId!: string;
+
+  confirmationService = inject(ConfirmationService);
+  messageService = inject(MessageService);
 
   nameVariants = new BehaviorSubject<AuthorNameVariant[]>([]);
   mainVariantId = new BehaviorSubject<string | undefined>(undefined);
@@ -74,11 +80,11 @@ export class EditAuthorComponent implements OnInit {
     );
   }
 
-  onSetMainVariant(variantId: string) {
-    this.service.setMainVariant(this.authorId, variantId).pipe(
+  onSetMainVariant(variant: AuthorNameVariant) {
+    this.service.setMainVariant(this.authorId, variant._id).pipe(
       take(1),
       tap((res) => {
-        if (res.mainVariantId !== variantId) {
+        if (res.mainVariantId !== variant._id) {
           throw new Error('Unable to set main variant');
         }
       }),
@@ -87,7 +93,14 @@ export class EditAuthorComponent implements OnInit {
         // this.cd.markForCheck();
         this.mainVariantId.next(res.mainVariantId);
       },
-      error: console.error,
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `An error occurred. Name variant "${variant.display}" cannot be set as main.`,
+        });
+      },
     });
   }
 
@@ -107,5 +120,46 @@ export class EditAuthorComponent implements OnInit {
       this.isSavingNameVariant = false;
       this.showEditDialog = false;
     }, 1000);
+  }
+
+  onDeleteVariant(nameVariant: AuthorNameVariant) {
+    this.confirmationService.confirm({
+      accept: () => {
+        this.service.deleteNameVariant(this.authorId, nameVariant._id).pipe(
+          take(1),
+        ).subscribe({
+          next: () => {
+            this.nameVariants.next(this.nameVariants.getValue().filter(variant => variant._id !== nameVariant._id));
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Deleted',
+              detail: `Name variant "${nameVariant.display}" has been deleted.`,
+            });
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: `An error occurred. Name variant "${nameVariant.display}" has not been deleted.`,
+            });
+          },
+        });
+      },
+      message: `Do you want to delete the variant <i>${nameVariant.display}</i>?`,
+      icon: 'pi pi-exclamation-circle',
+      header: 'Delete name variant',
+      // dismissableMask: true,
+      defaultFocus: 'reject',
+      acceptButtonProps: {
+        label: 'Delete',
+        severity: 'danger',
+        icon: 'pi pi-trash',
+      },
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        icon: 'pi pi-times',
+      },
+    });
   }
 }

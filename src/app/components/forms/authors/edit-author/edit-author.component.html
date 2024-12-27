@@ -3,8 +3,8 @@
     <tr>
       <th>Sorting</th>
       <th>Display</th>
-      <th>Type</th>
-      <th></th>
+      <th class="w-40">Type</th>
+      <th class="w-40"></th>
     </tr>
   </ng-template>
   <ng-template #body let-nameVariant>
@@ -22,20 +22,14 @@
       </td>
       <td>
         <p-buttonGroup>
-          <p-button
-              icon="pi pi-pencil" size="small" severity="secondary"
-              (click)="openEditDialog(nameVariant)"
-          ></p-button>
-          <p-button
-              icon="pi pi-bookmark" size="small" severity="secondary"
-              (click)="onSetMainVariant(nameVariant._id)"
-              [disabled]="main"
-          ></p-button>
-          <p-button
-              icon="pi pi-trash" size="small" severity="danger"
-              [pTooltip]="main ? 'The main variant cannot be deleted' : undefined" tooltipPosition="bottom"
-              [disabled]="main"
-          ></p-button>
+          <p-button icon="pi pi-pencil" size="small" severity="secondary"
+                    (click)="openEditDialog(nameVariant)" />
+          <p-button icon="pi pi-bookmark" size="small" severity="secondary"
+                    (click)="onSetMainVariant(nameVariant)" />
+          <p-button icon="pi pi-trash" size="small" severity="danger"
+                    [pTooltip]="main ? 'The main variant cannot be deleted' : undefined" tooltipPosition="bottom"
+                    [disabled]="main"
+                    (click)="onDeleteVariant(nameVariant)" />
         </p-buttonGroup>
       </td>
     </tr>
@@ -53,7 +47,8 @@
   <ng-template #footer>
     <p-buttonGroup>
       <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="closeEditDialog()" />
-      <p-button label="Save" [icon]="isSavingNameVariant ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success" (click)="saveNameVariant()" [disabled]="isSavingNameVariant"/>
+      <p-button label="Save" [icon]="isSavingNameVariant ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
+                (click)="saveNameVariant()" [disabled]="isSavingNameVariant" />
     </p-buttonGroup>
   </ng-template>
 </p-dialog>
