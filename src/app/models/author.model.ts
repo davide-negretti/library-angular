@@ -1,7 +1,7 @@
 export interface AuthorNameVariant {
   display: string;
   sorting: string;
-  type: string;
+  type: string | null;
   _id: string;
 }
 

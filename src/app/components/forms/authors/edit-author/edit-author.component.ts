@@ -1,12 +1,14 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Dialog } from 'primeng/dialog';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
@@ -23,8 +25,10 @@ import { AuthorService } from '../../../../services/rest/author.service';
     ButtonModule,
     ConfirmDialogModule,
     Dialog,
-    InputTextModule,
+    FloatLabelModule,
     FormsModule,
+    InputTextModule,
+    SelectModule,
     TableModule,
     Tag,
     Tooltip,
@@ -37,6 +41,8 @@ import { AuthorService } from '../../../../services/rest/author.service';
 export class EditAuthorComponent implements OnInit {
   @Input({ required: true }) authorId!: string;
 
+  @ViewChild('nameVariantForm') nameVariantForm: NgForm | undefined;
+
   confirmationService = inject(ConfirmationService);
   messageService = inject(MessageService);
 
@@ -45,9 +51,9 @@ export class EditAuthorComponent implements OnInit {
 
   nameVariants$ = this.nameVariants.asObservable();
 
-  showEditDialog = false;
+  showNameVariantDialog = false;
 
-  editNameVariant: AuthorNameVariant | undefined;
+  nameVariant: Partial<AuthorNameVariant> = {};
   isSavingNameVariant = false;
 
   readonly types = [
@@ -64,13 +70,23 @@ export class EditAuthorComponent implements OnInit {
   loadAllData() {
     this.service.getById(this.authorId).pipe(
       take(1),
-    ).subscribe((author) => {
-      const variantRecord: Record<string, boolean> = {};
-      for (const variant of author.nameVariants) {
-        variantRecord[variant._id] = false;
-      }
-      this.nameVariants.next([...author.nameVariants]);
-      this.mainVariantId.next(author.mainVariantId);
+    ).subscribe({
+      next: (author) => {
+        const variantRecord: Record<string, boolean> = {};
+        for (const variant of author.nameVariants) {
+          variantRecord[variant._id] = false;
+        }
+        this.nameVariants.next([...author.nameVariants]);
+        this.mainVariantId.next(author.mainVariantId);
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `An error occurred. Author data cannot be loaded.`,
+        });
+      },
     });
   }
 
@@ -90,7 +106,6 @@ export class EditAuthorComponent implements OnInit {
       }),
     ).subscribe({
       next: (res) => {
-        // this.cd.markForCheck();
         this.mainVariantId.next(res.mainVariantId);
       },
       error: (error) => {
@@ -104,22 +119,63 @@ export class EditAuthorComponent implements OnInit {
     });
   }
 
-  openEditDialog(nameVariant: AuthorNameVariant) {
-    this.editNameVariant = { ...nameVariant };
-    this.showEditDialog = true;
+  openEditDialog(nameVariant?: AuthorNameVariant) {
+    this.nameVariantForm!.form.reset();
+    this.nameVariant = nameVariant ? { ...nameVariant } : {};
+    this.showNameVariantDialog = true;
   }
 
   closeEditDialog() {
-    this.showEditDialog = false;
+    this.nameVariant = {};
+    this.showNameVariantDialog = false;
   }
 
-  saveNameVariant() { // TODO
+  onSaveNameVariant() { // TODO
     this.isSavingNameVariant = true;
-    setTimeout(() => {
-      this.cd.markForCheck();
-      this.isSavingNameVariant = false;
-      this.showEditDialog = false;
-    }, 1000);
+    this.service.saveNameVariant(this.authorId, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
+      next: (updatedAuthor) => {
+        this.nameVariants.next([...updatedAuthor.nameVariants]);
+        this.isSavingNameVariant = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Updated',
+          detail: `Name variant "${this.nameVariant.display}" has been updated.`,
+        });
+        this.closeEditDialog();
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `An error occurred. Name variant "${this.nameVariant.display}" cannot be updated.`,
+        });
+      },
+    });
+  }
+
+  onAddNameVariant() { // TODO
+    this.isSavingNameVariant = true;
+    this.service.addNameVariant(this.authorId, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
+      next: (updatedAuthor) => {
+        this.nameVariants.next([...updatedAuthor.nameVariants]);
+        this.isSavingNameVariant = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Added',
+          detail: `Name variant "${this.nameVariant.display}" has been added.`,
+        });
+        this.closeEditDialog();
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `An error occurred. Name variant "${this.nameVariant.display}" cannot be added.`,
+        });
+      },
+    });
   }
 
   onDeleteVariant(nameVariant: AuthorNameVariant) {
@@ -128,8 +184,8 @@ export class EditAuthorComponent implements OnInit {
         this.service.deleteNameVariant(this.authorId, nameVariant._id).pipe(
           take(1),
         ).subscribe({
-          next: () => {
-            this.nameVariants.next(this.nameVariants.getValue().filter(variant => variant._id !== nameVariant._id));
+          next: (updatedAuthor) => {
+            this.nameVariants.next([...updatedAuthor.nameVariants]);
             this.messageService.add({
               severity: 'success',
               summary: 'Deleted',
@@ -148,7 +204,6 @@ export class EditAuthorComponent implements OnInit {
       message: `Do you want to delete the variant <i>${nameVariant.display}</i>?`,
       icon: 'pi pi-exclamation-circle',
       header: 'Delete name variant',
-      // dismissableMask: true,
       defaultFocus: 'reject',
       acceptButtonProps: {
         label: 'Delete',

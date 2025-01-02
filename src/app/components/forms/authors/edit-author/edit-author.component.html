@@ -25,6 +25,7 @@
           <p-button icon="pi pi-pencil" size="small" severity="secondary"
                     (click)="openEditDialog(nameVariant)" />
           <p-button icon="pi pi-bookmark" size="small" severity="secondary"
+                    [disabled]="main"
                     (click)="onSetMainVariant(nameVariant)" />
           <p-button icon="pi pi-trash" size="small" severity="danger"
                     [pTooltip]="main ? 'The main variant cannot be deleted' : undefined" tooltipPosition="bottom"
@@ -35,20 +36,38 @@
     </tr>
   </ng-template>
   <ng-template #footer>
-    <p-button icon="pi pi-plus" size="small" severity="success" label="Add"></p-button>
+    <p-button icon="pi pi-plus" size="small" severity="success" label="Add" (click)="openEditDialog()"></p-button>
   </ng-template>
 </p-table>
 
-<p-dialog header="Edit Profile" [modal]="true" [(visible)]="showEditDialog" [style]="{ width: '25rem' }">
+<p-dialog header="Edit Profile" [modal]="true" [(visible)]="showNameVariantDialog" [style]="{ width: '25rem' }">
   <ng-template #header>
-    <span class="text-lg font-bold">Edit name variant</span> {{ showEditDialog }}
+    <span class="text-lg font-bold">{{ nameVariant._id ? 'Edit name variant' : 'Add name variant' }}</span>
   </ng-template>
-  <div><pre>{{ editNameVariant | json }}</pre></div>
+
+  <form #nameVariantForm="ngForm" id="editForm">
+    <p-floatlabel variant="in">
+      <input pInputText id="display" [(ngModel)]="nameVariant.display" name="display" required />
+      <label for="display">Display</label>
+    </p-floatlabel>
+    <p-floatlabel variant="in">
+      <input pInputText id="sorting" [(ngModel)]="nameVariant.sorting" name="sorting" required />
+      <label for="sorting">Sorting</label>
+    </p-floatlabel>
+    <p-floatlabel variant="in">
+      <p-select id="type" [options]="types" [(ngModel)]="nameVariant.type" [editable]="true" name="type"
+                appendTo="body" showClear required />
+      <label for="type">Type</label>
+    </p-floatlabel>
+  </form>
+
   <ng-template #footer>
     <p-buttonGroup>
       <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="closeEditDialog()" />
       <p-button label="Save" [icon]="isSavingNameVariant ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
-                (click)="saveNameVariant()" [disabled]="isSavingNameVariant" />
+                [disabled]="isSavingNameVariant || nameVariantForm.invalid" (click)="nameVariant._id ? onSaveNameVariant() : onAddNameVariant()" />
     </p-buttonGroup>
   </ng-template>
 </p-dialog>
+
+<pre>{{ nameVariant | json }}</pre>

@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Author } from '../../models/author.model';
+import { delay, Observable, of } from 'rxjs';
+import { Author, AuthorNameVariant } from '../../models/author.model';
 import { PaginatedResponse } from '../../models/paginated-response.model';
 import { RestService } from './abstract.service';
 
@@ -15,6 +15,14 @@ export class AuthorService extends RestService {
 
   getById(id: string): Observable<Author> {
     return this.http.get<Author>(this.apiUrl(id));
+  }
+
+  saveNameVariant(authorId: string, variant: AuthorNameVariant) {
+    return this.http.put<Author>(this.apiUrl([authorId, 'variants']), variant);
+  }
+
+  addNameVariant(authorId: string, variant: AuthorNameVariant) {
+    return this.http.post<Author>(this.apiUrl([authorId, 'variants']), variant);
   }
 
   find(query: string, startFrom = 0, pageSize = 20) {
@@ -36,6 +44,6 @@ export class AuthorService extends RestService {
   }
 
   deleteNameVariant(authorId: string, variantId: string) {
-    return this.http.delete(this.apiUrl([authorId, 'variants', variantId]));
+    return this.http.delete<Author>(this.apiUrl([authorId, 'variants', variantId]));
   }
 }
