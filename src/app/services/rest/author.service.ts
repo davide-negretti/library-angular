@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { CreateAuthorDto } from '../../dtos/create-author.dto';
 import { Author, AuthorNameVariant } from '../../models/author.model';
 import { PaginatedResponse } from '../../models/paginated-response.model';
 import { RestService } from './abstract.service';
@@ -34,6 +35,10 @@ export class AuthorService extends RestService {
       params = params.set('size', pageSize);
     }
     return this.http.get<PaginatedResponse<Author>>(this.apiUrl('search'), { params });
+  }
+
+  createAuthor(mainNameVariant: CreateAuthorDto) {
+    return this.http.post<Author>(this.apiUrl(), mainNameVariant);
   }
 
   setMainVariant(authorId: string, mainVariantId: string) {

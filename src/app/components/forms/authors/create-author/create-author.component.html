@@ -1,0 +1,33 @@
+<form #authorForm="ngForm" (ngSubmit)="saveAuthor()">
+  <p-iftalabel>
+    <input id="sorting" name="sorting"
+           [(ngModel)]="nameVariantSorting"
+           placeholder="Surname, Name"
+           (blur)="fillDisplay()"
+           pInputText required />
+    <label for="sorting">Sorting</label>
+  </p-iftalabel>
+  <p-iftalabel>
+    <input id="display" name="display"
+           [(ngModel)]="nameVariantDisplay"
+           placeholder="Name Surname"
+           pInputText required />
+    <label for="display">Display</label>
+  </p-iftalabel>
+  <p-iftalabel>
+    <p-select id="name-variant-type" name="nameVariantType"
+              [options]="nameVariantTypes" [(ngModel)]="nameVariantType"
+              placeholder="Select or type" required
+              appendTo="body" />
+    <label for="name-variant-type">Name variant type</label>
+  </p-iftalabel>
+  <p-iftalabel>
+    <p-select id="author-type" name="authorType"
+              [options]="authorTypes" [(ngModel)]="authorType"
+              placeholder="Select" required
+              appendTo="body" />
+    <label for="author-type">Author type</label>
+  </p-iftalabel>
+  <p-button label="Save" [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
+            type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
+</form>

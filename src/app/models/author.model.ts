@@ -8,5 +8,6 @@ export interface AuthorNameVariant {
 export interface Author {
   mainVariantId: string;
   nameVariants: AuthorNameVariant[];
+  type: string;
   _id: string;
 }
