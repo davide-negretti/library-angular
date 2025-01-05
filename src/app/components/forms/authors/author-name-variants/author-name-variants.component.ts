@@ -17,7 +17,7 @@ import { AuthorNameVariant } from '../../../../models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({
-  selector: 'l-edit-author',
+  selector: 'l-author-name-variants',
   standalone: true,
   imports: [
     AsyncPipe,
@@ -34,11 +34,11 @@ import { AuthorService } from '../../../../services/rest/author.service';
     Tooltip,
     JsonPipe,
   ],
-  templateUrl: './edit-author.component.html',
-  styleUrl: './edit-author.component.scss',
+  templateUrl: './author-name-variants.component.html',
+  styleUrl: './author-name-variants.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditAuthorComponent implements OnInit {
+export class AuthorNameVariantsComponent implements OnInit {
   @Input({ required: true }) authorId!: string;
 
   @ViewChild('nameVariantForm') nameVariantForm: NgForm | undefined;

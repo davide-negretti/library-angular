@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { EditAuthorComponent } from '../forms/authors/edit-author/edit-author.component';
+import { AuthorNameVariantsComponent } from '../forms/authors/author-name-variants/author-name-variants.component';
 import { SearchAuthorComponent } from '../forms/authors/search-author/search-author.component';
 
 enum SelectAuthorStep {
@@ -19,7 +19,7 @@ Search > Review > Confirm
   selector: 'l-select-author',
   standalone: true,
   imports: [
-    EditAuthorComponent,
+    AuthorNameVariantsComponent,
     SearchAuthorComponent,
   ],
   templateUrl: './select-author.component.html',

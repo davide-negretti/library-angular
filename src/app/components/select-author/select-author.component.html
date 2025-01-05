@@ -6,7 +6,7 @@
     </l-search-author>
   }
   @case (SelectAuthorStep.REVIEW) {
-    <l-edit-author [authorId]="selectedAuthorId!"></l-edit-author>
+    <l-author-name-variants [authorId]="selectedAuthorId!"></l-author-name-variants>
   }
   @case (SelectAuthorStep.INSERT) {
     <div>TODO: Add new author</div>

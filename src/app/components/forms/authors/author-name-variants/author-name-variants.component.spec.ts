@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditAuthorComponent } from './edit-author.component';
+import { AuthorNameVariantsComponent } from './author-name-variants.component';
 
 describe('ReviewAuthorComponent', () => {
-  let component: EditAuthorComponent;
-  let fixture: ComponentFixture<EditAuthorComponent>;
+  let component: AuthorNameVariantsComponent;
+  let fixture: ComponentFixture<AuthorNameVariantsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditAuthorComponent],
+      imports: [AuthorNameVariantsComponent],
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(EditAuthorComponent);
+    fixture = TestBed.createComponent(AuthorNameVariantsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
