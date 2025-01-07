@@ -8,9 +8,9 @@ describe('SelectAuthorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectAuthorComponent]
+      imports: [SelectAuthorComponent],
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(SelectAuthorComponent);
     component = fixture.componentInstance;

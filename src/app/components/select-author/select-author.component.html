@@ -2,14 +2,13 @@
   @case (SelectAuthorStep.SEARCH) {
     <l-search-author
       (selectedAuthorId)="onAuthorSelected($event)"
-      (addNewAuthor)="onAddNewAuthor($event)">
-    </l-search-author>
+      (addNewAuthor)="onAddNewAuthor($event)" />
   }
   @case (SelectAuthorStep.REVIEW) {
-    <div>TODO: Review author</div>
+    <l-author-name-variants [authorId]="selectedAuthorId!" />
   }
   @case (SelectAuthorStep.INSERT) {
-    <div>TODO: Add new author</div>
+    <l-create-author />
   }
   @case (SelectAuthorStep.CONFIRM) {
     <div>TODO: Confirm new or selected author</div>
