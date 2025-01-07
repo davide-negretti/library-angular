@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 
@@ -6,6 +7,7 @@ import { MenubarModule } from 'primeng/menubar';
   selector: 'l-main-menu',
   imports: [
     MenubarModule,
+    RouterLink,
   ],
   templateUrl: './main-menu.component.html',
   styleUrl: './main-menu.component.scss',
@@ -15,7 +17,12 @@ export class MainMenuComponent {
     {
       label: 'Home',
       icon: 'pi pi-home',
-      route: '/',
+      route: '',
+    },
+    {
+      label: 'Authors',
+      icon: 'pi pi-users',
+      route: 'authors',
     },
   ];
 }
