@@ -120,7 +120,7 @@ export class AuthorNameVariantsComponent implements OnInit {
   }
 
   openEditDialog(nameVariant?: AuthorNameVariant) {
-    this.nameVariantForm!.form.reset();
+    this.nameVariantForm?.form.reset();
     this.nameVariant = nameVariant ? { ...nameVariant } : {};
     this.showNameVariantDialog = true;
   }
@@ -139,7 +139,7 @@ export class AuthorNameVariantsComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Updated',
-          detail: `Name variant "${this.nameVariant.display}" has been updated.`,
+          detail: `Name variant "${this.nameVariant.display ?? ''}" has been updated.`,
         });
         this.closeEditDialog();
       },
@@ -148,7 +148,7 @@ export class AuthorNameVariantsComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: `An error occurred. Name variant "${this.nameVariant.display}" cannot be updated.`,
+          detail: `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be updated.`,
         });
       },
     });
@@ -161,9 +161,9 @@ export class AuthorNameVariantsComponent implements OnInit {
         this.nameVariants.next([...updatedAuthor.nameVariants]);
         this.isSavingNameVariant = false;
         this.messageService.add({
+          detail: `Name variant "${this.nameVariant.display ?? ''}" has been added.`,
           severity: 'success',
           summary: 'Added',
-          detail: `Name variant "${this.nameVariant.display}" has been added.`,
         });
         this.closeEditDialog();
       },
@@ -172,7 +172,7 @@ export class AuthorNameVariantsComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: `An error occurred. Name variant "${this.nameVariant.display}" cannot be added.`,
+          detail: `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be added.`,
         });
       },
     });
