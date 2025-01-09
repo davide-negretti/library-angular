@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
+import { AllAuthorsComponent } from './components/authors/all-authors/all-authors.component';
 import { AuthorDetailsComponent } from './components/authors/author-details/author-details.component';
-import { AuthorListComponent } from './components/authors/author-list/author-list.component';
 import { AuthorsComponent } from './components/authors/authors.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { authorResolver } from './resolvers/author.resolver';
@@ -13,7 +13,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: AuthorListComponent,
+        component: AllAuthorsComponent,
       },
       {
         path: ':id',
