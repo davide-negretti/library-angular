@@ -1,9 +1,11 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateAuthorDto } from '../../dtos/create-author.dto';
-import { Author, AuthorNameVariant } from '../../models/author.model';
-import { PaginatedResponse } from '../../models/paginated-response.model';
+import { AuthorNameVariantSearchResultDto } from '../../interfaces/dtos/author-name-variant-search-result.dto';
+import { AuthorSearchResultDto } from '../../interfaces/dtos/author-search-result.dto';
+import { CreateAuthorDto } from '../../interfaces/dtos/create-author.dto';
+import { Author, AuthorNameVariant } from '../../interfaces/models/author.model';
+import { PaginatedResponse } from '../../interfaces/paginated-response.model';
 import { RestService } from './abstract.service';
 
 @Injectable({
@@ -26,15 +28,26 @@ export class AuthorService extends RestService {
     return this.http.post<Author>(this.apiUrl([authorId, 'variants']), variant);
   }
 
-  find(query: string, startFrom = 0, pageSize = 20) {
+  findAuthors(query = '', page = 1, pageSize = 20) {
     let params: HttpParams = new HttpParams().set('q', query);
-    if (startFrom && startFrom > 0) {
-      params = params.set('from', startFrom);
+    if (page && page > 1) {
+      params = params.set('page', page);
     }
     if (pageSize && pageSize > 0) {
-      params = params.set('size', pageSize);
+      params = params.set('pageSize', pageSize);
     }
-    return this.http.get<PaginatedResponse<Author>>(this.apiUrl('search'), { params });
+    return this.http.get<PaginatedResponse<AuthorSearchResultDto>>(this.apiUrl(), { params });
+  }
+
+  findAuthorNameVariants(query = '', page = 1, pageSize = 20) {
+    let params: HttpParams = new HttpParams().set('q', query);
+    if (page && page > 1) {
+      params = params.set('page', page);
+    }
+    if (pageSize && pageSize > 0) {
+      params = params.set('pageSize', pageSize);
+    }
+    return this.http.get<PaginatedResponse<AuthorNameVariantSearchResultDto>>(this.apiUrl('variants'), { params });
   }
 
   createAuthor(mainNameVariant: CreateAuthorDto) {

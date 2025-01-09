@@ -8,14 +8,12 @@ import { InputText } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { Tooltip } from 'primeng/tooltip';
 import { take } from 'rxjs';
-import { Author } from '../../../../models/author.model';
+import { AuthorNameVariantSearchResultDto } from '../../../../interfaces/dtos/author-name-variant-search-result.dto';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 interface LoadedData {
   id: string;
   name: string;
-  alias?: string;
-  listDisplay: string;
 }
 
 @Component({
@@ -40,24 +38,24 @@ export class SearchAuthorComponent {
   searchQuery = '';
   loadedData = signal<LoadedData[]>([]);
 
-  readonly pageSize = 20;
-  startFrom = 0;
-  isLastPageEmpty = false;
+  readonly pageSize = 5;
+  page = 1;
+  isLastPage = false; // TODO fix
 
-  selectedAuthor: LoadedData | undefined;
+  selectedAuthor: AuthorNameVariantSearchResultDto | undefined;
 
   selectedAuthorId = output<string>();
   addNewAuthor = output<string>();
 
   onLoadMore() {
-    if (!this.isLastPageEmpty) {
+    if (!this.isLastPage) {
       this.loadPage(this.searchQuery);
     }
   }
 
   resetSearch() {
-    this.startFrom = 0;
-    this.isLastPageEmpty = false;
+    this.page = 1;
+    this.isLastPage = false;
     this.selectedAuthor = undefined;
     this.loadedData.update(() => []);
   }
@@ -71,44 +69,23 @@ export class SearchAuthorComponent {
     }
   }
 
-  transformData(responseData: Author[], query: string) {
-    return responseData.flatMap((author: Author) => {
-      const regExp = new RegExp(query, 'i');
-      const mainVariant = author.nameVariants
-        .find(nameVariant => nameVariant._id === author.mainVariantId);
-      if (mainVariant && regExp.test(mainVariant.display)) {
-        const mainVariantDisplay: LoadedData = {
-          id: author._id,
-          name: mainVariant.display,
-          listDisplay: mainVariant.sorting,
-        };
-        return [mainVariantDisplay];
-      } else {
-        return author.nameVariants.filter(nameVariant =>
-          regExp.test(nameVariant.display) && nameVariant._id !== author.mainVariantId,
-        ).map((nameVariant): LoadedData => {
-          return {
-            id: author._id,
-            name: mainVariant ? mainVariant.display : nameVariant.display,
-            alias: mainVariant ? nameVariant.display : undefined,
-            listDisplay: mainVariant ? `${mainVariant.sorting} (${nameVariant.display})` : nameVariant.sorting,
-          };
-        });
-      }
-    });
+  transformData(responseData: AuthorNameVariantSearchResultDto[]) {
+    return responseData.map((nameVariant: AuthorNameVariantSearchResultDto) => ({
+      id: nameVariant.authorId,
+      name: nameVariant.sorting,
+    } as LoadedData));
   }
 
   loadPage(query: string) {
-    if (!this.isLastPageEmpty) {
-      this.service.find(query, this.startFrom, this.pageSize).pipe(take(1)).subscribe((res) => {
-        const responseData = res.data;
-        this.startFrom += this.pageSize;
-        this.loadedData.update(previousData => [...previousData, ...this.transformData(responseData, query)]);
-        if (responseData.length < this.pageSize) {
-          this.isLastPageEmpty = true;
-        }
-      });
-    }
+    this.service.findAuthorNameVariants(query, this.page, this.pageSize).pipe(take(1)).subscribe((res) => {
+      const responseData = res.data;
+      const paginationData = res.pagination;
+      if (this.page === paginationData.totalPages) {
+        this.isLastPage = true;
+      }
+      this.page++;
+      this.loadedData.update(previousData => [...previousData, ...this.transformData(responseData)]);
+    });
   }
 
   onSelectCurrent() {
@@ -116,7 +93,7 @@ export class SearchAuthorComponent {
       console.warn('No author selected');
       return;
     }
-    this.selectedAuthorId.emit(this.selectedAuthor.id);
+    this.selectedAuthorId.emit(this.selectedAuthor._id);
   }
 
   onAddNew() {

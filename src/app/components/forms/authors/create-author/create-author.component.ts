@@ -6,7 +6,7 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { take } from 'rxjs';
-import { CreateAuthorDto } from '../../../../dtos/create-author.dto';
+import { CreateAuthorDto } from '../../../../interfaces/dtos/create-author.dto';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({

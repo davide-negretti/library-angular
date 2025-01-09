@@ -6,7 +6,7 @@
 
   <p-buttonGroup>
     <p-button label="Load more" icon="pi pi-spinner" severity="secondary"
-              [disabled]="searchQuery.length === 0 || isLastPageEmpty" (onClick)="onLoadMore()" />
+              [disabled]="searchQuery.length === 0 || isLastPage" (onClick)="onLoadMore()" />
     <p-button label="Add new" icon="pi pi-plus-circle" severity="secondary"
               pTooltip="Check if the author already exists before adding a new one"
               tooltipPosition="bottom" [tooltipDisabled]="searchQuery.length > 0"
@@ -16,7 +16,7 @@
   </p-buttonGroup>
 
   <p-listbox [(ngModel)]="selectedAuthor" [options]="loadedData()"
-             optionLabel="listDisplay" [checkmark]="true" [highlightOnSelect]="false" />
+             optionLabel="name" [checkmark]="true" [highlightOnSelect]="false" />
 </div>
 
 <pre>{{ selectedAuthor | json }}</pre>

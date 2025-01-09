@@ -13,7 +13,7 @@ import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
 import { BehaviorSubject, map, take, tap } from 'rxjs';
-import { AuthorNameVariant } from '../../../../models/author.model';
+import { AuthorNameVariant } from '../../../../interfaces/models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({
