@@ -77,7 +77,7 @@ export class SearchAuthorComponent {
   }
 
   loadPage(query: string) {
-    this.service.findAuthorNameVariants(query, this.page, this.pageSize).pipe(take(1)).subscribe((res) => {
+    this.service.findAuthorNameVariants(query, { page: this.page, pageSize: this.pageSize }).pipe(take(1)).subscribe((res) => {
       const responseData = res.data;
       const paginationData = res.pagination;
       if (this.page === paginationData.totalPages) {

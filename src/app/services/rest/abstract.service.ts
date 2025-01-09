@@ -2,6 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
+export interface PaginationParameters {
+  from?: number;
+  page?: number;
+  pageSize?: number;
+}
+
 export abstract class RestService {
   protected http = inject(HttpClient);
 
