@@ -1,0 +1,26 @@
+<p-table
+  [lazy]="true"
+  (onLazyLoad)="loadData($event)"
+  [value]="currentPageData"
+  [first]="first"
+  [rows]="rows"
+  [rowsPerPageOptions]="rowsPerPageOptions"
+  [totalRecords]="totalRecords"
+  [paginator]="true"
+  class="not-prose"
+>
+  <ng-template #header>
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-author>
+    <tr>
+      <td>{{ author.mainNameVariant.sorting }}</td>
+      <td>
+        <p-button [routerLink]="author._id" icon="pi pi-info" severity="info"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
