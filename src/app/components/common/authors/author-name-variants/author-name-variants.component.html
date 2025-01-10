@@ -1,4 +1,8 @@
-<p-table [value]="(nameVariants$ | async)!" dataKey="_id">
+<p-table
+  [value]="(nameVariants$ | async)!"
+  dataKey="_id"
+  class="not-prose"
+>
   <ng-template #header>
     <tr>
       <th>Sorting</th>

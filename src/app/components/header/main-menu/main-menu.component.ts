@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
 
 @Component({
@@ -8,6 +9,7 @@ import { MenubarModule } from 'primeng/menubar';
   imports: [
     MenubarModule,
     RouterLink,
+    ButtonModule,
   ],
   templateUrl: './main-menu.component.html',
   styleUrl: './main-menu.component.scss',
@@ -25,4 +27,9 @@ export class MainMenuComponent {
       route: 'authors',
     },
   ];
+
+  toggleDarkMode() {
+    document.querySelector('html')?.classList.toggle('dark-mode');
+    document.querySelector('main')?.classList.toggle('dark:prose-invert');
+  }
 }

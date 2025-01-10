@@ -5,4 +5,7 @@
       <span class="ml-2">{{ item.label }}</span>
     </a>
   </ng-template>
+  <ng-template #end>
+    <p-button icon="pi pi-moon" severity="secondary" (click)="toggleDarkMode()"/>
+  </ng-template>
 </p-menubar>
