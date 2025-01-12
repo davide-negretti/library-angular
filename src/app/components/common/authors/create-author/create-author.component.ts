@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { IftaLabelModule } from 'primeng/iftalabel';
@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { take } from 'rxjs';
 import { CreateAuthorDto } from '../../../../interfaces/dtos/create-author.dto';
+import { Author } from '../../../../interfaces/models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({
@@ -16,13 +17,17 @@ import { AuthorService } from '../../../../services/rest/author.service';
     FormsModule,
     IftaLabelModule,
     InputTextModule,
-    ReactiveFormsModule,
     SelectModule,
   ],
   templateUrl: './create-author.component.html',
   styleUrl: './create-author.component.scss',
 })
 export class CreateAuthorComponent {
+  @Input() saveButtonLabel = 'Save';
+  @Input() saveButtonIcon = 'pi-save';
+  @Input() saveButtonIconPos: 'left' | 'right' = 'left';
+  @Output() authorSaved = new EventEmitter<Author>();
+
   isSavingAuthor = false;
 
   nameVariantDisplay = '';
@@ -50,7 +55,19 @@ export class CreateAuthorComponent {
       mainNameVariantType: this.nameVariantType,
       authorType: this.authorType,
     };
-    this.service.createAuthor(author).pipe(take(1)).subscribe(console.log);
+    this.service.createAuthor(author).pipe(take(1)).subscribe({
+      next: (author: Author) => {
+        this.authorSaved.emit(author);
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `An error occurred. Author cannot be saved.`,
+        });
+      },
+    });
   }
 
   fillDisplay() {
