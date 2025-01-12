@@ -24,7 +24,18 @@ export class MainMenuComponent {
     {
       label: 'Authors',
       icon: 'pi pi-users',
-      route: 'authors',
+      items: [
+        {
+          label: 'All authors',
+          icon: 'pi pi-list',
+          route: 'authors',
+        },
+        {
+          label: 'New author',
+          icon: 'pi pi-plus',
+          route: 'authors/new',
+        },
+      ],
     },
   ];
 
