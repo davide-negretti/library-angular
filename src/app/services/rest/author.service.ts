@@ -6,7 +6,7 @@ import { AuthorSearchResultDto } from '../../interfaces/dtos/author-search-resul
 import { CreateAuthorDto } from '../../interfaces/dtos/create-author.dto';
 import { Author, AuthorNameVariant } from '../../interfaces/models/author.model';
 import { PaginatedResponse } from '../../interfaces/paginated-response.model';
-import { RestService } from './abstract.service';
+import { PaginationParameters, RestService } from './abstract.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,25 +28,13 @@ export class AuthorService extends RestService {
     return this.http.post<Author>(this.apiUrl([authorId, 'variants']), variant);
   }
 
-  findAuthors(query = '', page = 1, pageSize = 20) {
-    let params: HttpParams = new HttpParams().set('q', query);
-    if (page && page > 1) {
-      params = params.set('page', page);
-    }
-    if (pageSize && pageSize > 0) {
-      params = params.set('pageSize', pageSize);
-    }
+  findAuthors(query = '', paginationParameters: PaginationParameters) {
+    const params: HttpParams = new HttpParams({ fromObject: { ...paginationParameters } }).append('q', query);
     return this.http.get<PaginatedResponse<AuthorSearchResultDto>>(this.apiUrl(), { params });
   }
 
-  findAuthorNameVariants(query = '', page = 1, pageSize = 20) {
-    let params: HttpParams = new HttpParams().set('q', query);
-    if (page && page > 1) {
-      params = params.set('page', page);
-    }
-    if (pageSize && pageSize > 0) {
-      params = params.set('pageSize', pageSize);
-    }
+  findAuthorNameVariants(query = '', paginationParameters: PaginationParameters) {
+    const params: HttpParams = new HttpParams({ fromObject: { ...paginationParameters } }).append('q', query);
     return this.http.get<PaginatedResponse<AuthorNameVariantSearchResultDto>>(this.apiUrl('variants'), { params });
   }
 

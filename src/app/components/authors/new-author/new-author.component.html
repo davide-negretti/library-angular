@@ -1,0 +1,40 @@
+<div class="card">
+  <p-stepper [value]="currentStep" [linear]="true">
+    <p-step-item [value]="1">
+      <p-step>Create author</p-step>
+      <p-step-panel>
+        <ng-template #content>
+          <l-create-author (authorSaved)="onAuthorSaved($event)" saveButtonIcon="pi-arrow-circle-right"
+                           saveButtonLabel="Save and go to next step" saveButtonIconPos="right" />
+        </ng-template>
+      </p-step-panel>
+    </p-step-item>
+    <p-step-item [value]="2">
+      <p-step>Add name variants</p-step>
+      <p-step-panel>
+        <ng-template #content>
+          @if (this.author) {
+            <l-author-name-variants [authorId]="this.author._id">
+              <p-button size="small" severity="secondary" icon="pi pi-arrow-circle-right" iconPos="right"
+                        (click)="nextStep()" label="Next"></p-button>
+            </l-author-name-variants>
+          } @else {
+            <p-message styleClass="my-2" severity="error">Unknown error: the author cannot be found.</p-message>
+          }
+        </ng-template>
+      </p-step-panel>
+    </p-step-item>
+    <p-step-item [value]="3">
+      <p-step>Add details</p-step>
+      <p-step-panel>
+        <ng-template #content>
+          X
+        </ng-template>
+      </p-step-panel>
+    </p-step-item>
+  </p-stepper>
+</div>
+
+<div>
+  <p-button icon="pi pi-replay" severity="secondary" label="New Author" (click)="newAuthor()" />
+</div>

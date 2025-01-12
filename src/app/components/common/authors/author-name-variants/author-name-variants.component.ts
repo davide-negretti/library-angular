@@ -1,4 +1,4 @@
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Dialog } from 'primeng/dialog';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
@@ -25,14 +25,13 @@ import { AuthorService } from '../../../../services/rest/author.service';
     ButtonModule,
     ConfirmDialogModule,
     Dialog,
-    FloatLabelModule,
+    IftaLabelModule,
     FormsModule,
     InputTextModule,
     SelectModule,
     TableModule,
     Tag,
     Tooltip,
-    JsonPipe,
   ],
   templateUrl: './author-name-variants.component.html',
   styleUrl: './author-name-variants.component.scss',

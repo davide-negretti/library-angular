@@ -1,1 +1,11 @@
-<p-menubar [model]="menuItems" />
+<p-menubar [model]="menuItems">
+  <ng-template #item let-item>
+    <a [routerLink]="item.route" class="p-menubar-item-link">
+      <span [class]="item.icon"></span>
+      <span class="ml-2">{{ item.label }}</span>
+    </a>
+  </ng-template>
+  <ng-template #end>
+    <p-button icon="pi pi-moon" severity="secondary" (click)="toggleDarkMode()"/>
+  </ng-template>
+</p-menubar>

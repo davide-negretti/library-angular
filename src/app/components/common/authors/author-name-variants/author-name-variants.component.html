@@ -1,4 +1,8 @@
-<p-table [value]="(nameVariants$ | async)!" dataKey="_id">
+<p-table
+  [value]="(nameVariants$ | async)!"
+  dataKey="_id"
+  class="not-prose"
+>
   <ng-template #header>
     <tr>
       <th>Sorting</th>
@@ -36,7 +40,14 @@
     </tr>
   </ng-template>
   <ng-template #footer>
-    <p-button icon="pi pi-plus" size="small" severity="success" label="Add" (click)="openEditDialog()"></p-button>
+    <tr>
+      <td colspan="4">
+        <p-buttonGroup>
+          <p-button icon="pi pi-plus" size="small" severity="success" label="Add" (click)="openEditDialog()"></p-button>
+          <ng-content select="p-button"/>
+        </p-buttonGroup>
+      </td>
+    </tr>
   </ng-template>
 </p-table>
 
@@ -45,29 +56,28 @@
     <span class="text-lg font-bold">{{ nameVariant._id ? 'Edit name variant' : 'Add name variant' }}</span>
   </ng-template>
 
-  <form #nameVariantForm="ngForm" id="editForm">
-    <p-floatlabel variant="in">
-      <input pInputText id="display" [(ngModel)]="nameVariant.display" name="display" required />
+  <form #nameVariantForm="ngForm" id="editForm" class="flex flex-col gap-2">
+    <p-iftalabel>
+      <input pInputText id="display" [(ngModel)]="nameVariant.display" name="display" required fluid />
       <label for="display">Display</label>
-    </p-floatlabel>
-    <p-floatlabel variant="in">
-      <input pInputText id="sorting" [(ngModel)]="nameVariant.sorting" name="sorting" required />
+    </p-iftalabel>
+    <p-iftalabel>
+      <input pInputText id="sorting" [(ngModel)]="nameVariant.sorting" name="sorting" required fluid />
       <label for="sorting">Sorting</label>
-    </p-floatlabel>
-    <p-floatlabel variant="in">
+    </p-iftalabel>
+    <p-iftalabel>
       <p-select id="type" [options]="types" [(ngModel)]="nameVariant.type" [editable]="true" name="type"
-                appendTo="body" showClear required />
+                appendTo="body" showClear required fluid />
       <label for="type">Type</label>
-    </p-floatlabel>
+    </p-iftalabel>
   </form>
 
   <ng-template #footer>
     <p-buttonGroup>
       <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="closeEditDialog()" />
       <p-button label="Save" [icon]="isSavingNameVariant ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
-                [disabled]="isSavingNameVariant || nameVariantForm.invalid" (click)="nameVariant._id ? onSaveNameVariant() : onAddNameVariant()" />
+                [disabled]="isSavingNameVariant || nameVariantForm.invalid"
+                (click)="nameVariant._id ? onSaveNameVariant() : onAddNameVariant()" />
     </p-buttonGroup>
   </ng-template>
 </p-dialog>
-
-<pre>{{ nameVariant | json }}</pre>

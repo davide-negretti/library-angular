@@ -1,33 +1,35 @@
-<form #authorForm="ngForm" (ngSubmit)="saveAuthor()">
+<form #authorForm="ngForm" (ngSubmit)="saveAuthor()" class="flex flex-col gap-2 w-96">
   <p-iftalabel>
     <input id="sorting" name="sorting"
            [(ngModel)]="nameVariantSorting"
            placeholder="Surname, Name"
            (blur)="fillDisplay()"
-           pInputText required />
+           pInputText required fluid />
     <label for="sorting">Sorting</label>
   </p-iftalabel>
   <p-iftalabel>
     <input id="display" name="display"
            [(ngModel)]="nameVariantDisplay"
            placeholder="Name Surname"
-           pInputText required />
+           pInputText required fluid />
     <label for="display">Display</label>
   </p-iftalabel>
   <p-iftalabel>
     <p-select id="name-variant-type" name="nameVariantType"
               [options]="nameVariantTypes" [(ngModel)]="nameVariantType"
-              placeholder="Select or type" required
+              placeholder="Select or type" required fluid
               appendTo="body" />
     <label for="name-variant-type">Name variant type</label>
   </p-iftalabel>
   <p-iftalabel>
     <p-select id="author-type" name="authorType"
               [options]="authorTypes" [(ngModel)]="authorType"
-              placeholder="Select" required
+              placeholder="Select" required fluid
               appendTo="body" />
     <label for="author-type">Author type</label>
   </p-iftalabel>
-  <p-button label="Save" [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
+  <p-button [label]="saveButtonLabel"
+            [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi ' + saveButtonIcon" severity="success"
+            [iconPos]="saveButtonIconPos"
             type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
 </form>
