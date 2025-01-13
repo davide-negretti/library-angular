@@ -21,7 +21,7 @@ export class AuthorListComponent implements OnInit {
 
   readonly rowsPerPageOptions = [5, 10, 20, 50];
   first = 0;
-  rows = 5;
+  rows = 10;
 
   totalRecords = 0;
 
