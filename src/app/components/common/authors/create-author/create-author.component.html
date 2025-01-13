@@ -1,4 +1,4 @@
-<form #authorForm="ngForm" (ngSubmit)="saveAuthor()" class="flex flex-col gap-2 w-96">
+<form #authorForm="ngForm" class="flex flex-col gap-2 w-96">
   <p-iftalabel>
     <p-select id="author-type" name="authorType"
               [options]="authorTypeOptions" [(ngModel)]="authorType"
@@ -52,8 +52,13 @@
     <label for="language">Language code (ISO 639)</label>
   </p-iftalabel>
 
-  <p-button [label]="saveButtonLabel"
-            [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi ' + saveButtonIcon" severity="success"
-            [iconPos]="saveButtonIconPos"
-            type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
+
+  <p-buttonGroup>
+    <ng-content select="p-button">
+      <p-button label="Save" (click)="saveAuthor()"
+                [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
+                type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
+    </ng-content>
+  </p-buttonGroup>
+
 </form>

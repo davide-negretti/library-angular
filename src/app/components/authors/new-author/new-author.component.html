@@ -4,8 +4,12 @@
       <p-step>Create author</p-step>
       <p-step-panel>
         <ng-template #content>
-          <l-create-author (authorSaved)="onAuthorSaved($event)" saveButtonIcon="pi-arrow-circle-right"
-                           saveButtonLabel="Save and go to next step" saveButtonIconPos="right" />
+          <l-create-author (authorSaved)="onAuthorSaved($event)" #createAuthorComponent>
+            <p-button size="small" severity="success" icon="pi pi-replay" iconPos="right"
+                      (click)="saveAndRestart()" label="Save and create new"></p-button>
+            <p-button size="small" severity="secondary" icon="pi pi-arrow-circle-right" iconPos="right"
+                      (click)="saveAndNext()" label="Save and continue"></p-button>
+          </l-create-author>
         </ng-template>
       </p-step-panel>
     </p-step-item>

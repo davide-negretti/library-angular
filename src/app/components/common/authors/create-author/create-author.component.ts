@@ -1,7 +1,8 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
+import { ButtonGroup } from 'primeng/buttongroup';
 import { CheckboxModule } from 'primeng/checkbox';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,14 +26,12 @@ import { AuthorService } from '../../../../services/rest/author.service';
     InputTextModule,
     SelectModule,
     CheckboxModule,
+    ButtonGroup,
   ],
   templateUrl: './create-author.component.html',
   styleUrl: './create-author.component.scss',
 })
 export class CreateAuthorComponent {
-  @Input() saveButtonLabel = 'Save';
-  @Input() saveButtonIcon = 'pi-save';
-  @Input() saveButtonIconPos: 'left' | 'right' = 'left';
   @Output() authorSaved = new EventEmitter<Author>();
 
   isSavingAuthor = false;
@@ -54,7 +53,7 @@ export class CreateAuthorComponent {
   private readonly service = inject(AuthorService);
   private readonly messageService = inject(MessageService);
 
-  saveAuthor() {
+  public saveAuthor() {
     const author: CreateAuthorDto = {
       display: this.nameVariantDisplay,
       sorting: this.nameVariantSorting,

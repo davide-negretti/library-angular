@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { StepperModule } from 'primeng/stepper';
@@ -21,10 +21,17 @@ import { CreateAuthorComponent } from '../../common/authors/create-author/create
 export class NewAuthorComponent {
   currentStep = 1;
   author: Author | undefined;
+  restartOnSaved = false;
+
+  @ViewChild('createAuthorComponent') createAuthorComponent!: CreateAuthorComponent;
 
   onAuthorSaved(author: Author) {
     this.author = author;
-    this.currentStep++;
+    if (this.restartOnSaved) {
+      this.newAuthor();
+    } else {
+      this.nextStep();
+    }
   }
 
   nextStep() {
@@ -34,5 +41,15 @@ export class NewAuthorComponent {
   newAuthor() {
     this.author = undefined;
     this.currentStep = 1;
+  }
+
+  saveAndNext() {
+    this.restartOnSaved = false;
+    this.createAuthorComponent.saveAuthor();
+  }
+
+  saveAndRestart() {
+    this.restartOnSaved = true;
+    this.createAuthorComponent.saveAuthor();
   }
 }
