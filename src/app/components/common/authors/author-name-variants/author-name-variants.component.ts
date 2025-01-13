@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -55,12 +55,15 @@ export class AuthorNameVariantsComponent implements OnInit {
   nameVariant: Partial<AuthorNameVariant> = {};
   isSavingNameVariant = false;
 
-  readonly types = [
+  readonly typeOptions = [
     'original', 'short', 'pseudonym',
   ];
 
+  readonly localizationOptions = [
+    'original', 'transliterated', 'translated',
+  ];
+
   private readonly service = inject(AuthorService);
-  private readonly cd = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.loadAllData();
@@ -120,7 +123,7 @@ export class AuthorNameVariantsComponent implements OnInit {
 
   openEditDialog(nameVariant?: AuthorNameVariant) {
     this.nameVariantForm?.form.reset();
-    this.nameVariant = nameVariant ? { ...nameVariant } : {};
+    this.nameVariant = nameVariant ? { ...nameVariant } : { /* default values, if any */ };
     this.showNameVariantDialog = true;
   }
 
@@ -215,5 +218,16 @@ export class AuthorNameVariantsComponent implements OnInit {
         icon: 'pi pi-times',
       },
     });
+  }
+
+  getLangAndScript(nameVariant: AuthorNameVariant) {
+    const langAndScript: string[] = [];
+    if (nameVariant.script) {
+      langAndScript.push(nameVariant.script);
+    }
+    if (nameVariant.language) {
+      langAndScript.push(nameVariant.language);
+    }
+    return langAndScript.join(' / ');
   }
 }

@@ -1,4 +1,11 @@
-<form #authorForm="ngForm" (ngSubmit)="saveAuthor()" class="flex flex-col gap-2 w-96">
+<form #authorForm="ngForm" class="flex flex-col gap-2 w-96">
+  <p-iftalabel>
+    <p-select id="author-type" name="authorType"
+              [options]="authorTypeOptions" [(ngModel)]="authorType"
+              placeholder="Select the author type" required fluid
+              appendTo="body" />
+    <label for="author-type">Author type</label>
+  </p-iftalabel>
   <p-iftalabel>
     <input id="sorting" name="sorting"
            [(ngModel)]="nameVariantSorting"
@@ -16,20 +23,42 @@
   </p-iftalabel>
   <p-iftalabel>
     <p-select id="name-variant-type" name="nameVariantType"
-              [options]="nameVariantTypes" [(ngModel)]="nameVariantType"
-              placeholder="Select or type" required fluid
+              [options]="nameVariantTypeOptions" [(ngModel)]="nameVariantType"
+              placeholder="Select the main name variant type" required fluid
               appendTo="body" />
     <label for="name-variant-type">Name variant type</label>
   </p-iftalabel>
   <p-iftalabel>
-    <p-select id="author-type" name="authorType"
-              [options]="authorTypes" [(ngModel)]="authorType"
-              placeholder="Select" required fluid
+    <p-select id="localization" name="localization"
+              [options]="nameVariantLocalizationOptions" [(ngModel)]="nameVariantLocalization"
+              placeholder="Select the main name variant localization" required fluid
               appendTo="body" />
-    <label for="author-type">Author type</label>
+    <label for="name-variant-type">Name variant type</label>
   </p-iftalabel>
-  <p-button [label]="saveButtonLabel"
-            [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi ' + saveButtonIcon" severity="success"
-            [iconPos]="saveButtonIconPos"
-            type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
+
+
+  <p-iftalabel>
+    <input id="script" name="script"
+           [(ngModel)]="script"
+           placeholder="Latn"
+           pInputText fluid />
+    <label for="script">Script code (ISO 15924)</label>
+  </p-iftalabel>
+  <p-iftalabel>
+    <input id="language" name="language"
+           [(ngModel)]="language"
+           placeholder="eng"
+           pInputText fluid />
+    <label for="language">Language code (ISO 639)</label>
+  </p-iftalabel>
+
+
+  <p-buttonGroup>
+    <ng-content select="p-button">
+      <p-button label="Save" (click)="saveAuthor()"
+                [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
+                type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
+    </ng-content>
+  </p-buttonGroup>
+
 </form>
