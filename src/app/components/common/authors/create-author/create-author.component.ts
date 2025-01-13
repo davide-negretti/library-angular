@@ -2,12 +2,18 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { take } from 'rxjs';
 import { CreateAuthorDto } from '../../../../interfaces/dtos/create-author.dto';
-import { Author } from '../../../../interfaces/models/author.model';
+import {
+  Author,
+  AuthorNameVariantLocalization,
+  AuthorNameVariantType,
+  AuthorType,
+} from '../../../../interfaces/models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({
@@ -18,6 +24,7 @@ import { AuthorService } from '../../../../services/rest/author.service';
     IftaLabelModule,
     InputTextModule,
     SelectModule,
+    CheckboxModule,
   ],
   templateUrl: './create-author.component.html',
   styleUrl: './create-author.component.scss',
@@ -33,17 +40,16 @@ export class CreateAuthorComponent {
   nameVariantDisplay = '';
   nameVariantSorting = '';
   nameVariantType = '';
+  nameVariantLocalization = '';
   authorType = '';
+  script = '';
+  language = '';
 
   computedNameVariantDisplay = this.nameVariantDisplay;
 
-  readonly nameVariantTypes = [
-    'original', 'short', 'pseudonym',
-  ];
-
-  readonly authorTypes = [
-    'person', 'corporate', 'collective',
-  ];
+  nameVariantTypeOptions = Object.values(AuthorNameVariantType);
+  nameVariantLocalizationOptions = Object.values(AuthorNameVariantLocalization);
+  authorTypeOptions = Object.values(AuthorType);
 
   private readonly service = inject(AuthorService);
   private readonly messageService = inject(MessageService);
@@ -52,8 +58,11 @@ export class CreateAuthorComponent {
     const author: CreateAuthorDto = {
       display: this.nameVariantDisplay,
       sorting: this.nameVariantSorting,
-      mainNameVariantType: this.nameVariantType,
-      authorType: this.authorType,
+      mainNameVariantType: 'original', // TODO fix
+      authorType: 'person', // TODO fix
+      localization: this.nameVariantLocalization,
+      script: this.script.length ? this.script : undefined,
+      language: this.language.length ? this.language : undefined,
     };
     this.service.createAuthor(author).pipe(take(1)).subscribe({
       next: (author: Author) => {

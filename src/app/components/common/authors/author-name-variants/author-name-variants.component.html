@@ -21,8 +21,17 @@
         {{ nameVariant.display }}
       </td>
       <td>
-        <p-tag [severity]="main ? 'success' : 'info'" [icon]="main ? 'pi pi-bookmark' : undefined"
-               [value]="nameVariant.type" rounded />
+        <div class="flex gap-3">
+          <p-tag [severity]="main ? 'success' : 'info'" [icon]="main ? 'pi pi-bookmark' : undefined"
+                 [value]="nameVariant.type" rounded />
+          @if (nameVariant.localization !== 'original') {
+            <p-tag severity="secondary" [value]="nameVariant.localization" rounded />
+          }
+          @let langAndScript = getLangAndScript(nameVariant);
+          @if (langAndScript) {
+            <p-tag severity="secondary" [value]="langAndScript" rounded icon="pi pi-language" styleClass="text-nowrap" />
+          }
+        </div>
       </td>
       <td>
         <p-buttonGroup>
@@ -51,7 +60,7 @@
   </ng-template>
 </p-table>
 
-<p-dialog header="Edit Profile" [modal]="true" [(visible)]="showNameVariantDialog" [style]="{ width: '25rem' }">
+<p-dialog header="Name Variant" [modal]="true" [(visible)]="showNameVariantDialog" [style]="{ width: '25rem' }">
   <ng-template #header>
     <span class="text-lg font-bold">{{ nameVariant._id ? 'Edit name variant' : 'Add name variant' }}</span>
   </ng-template>
@@ -66,9 +75,26 @@
       <label for="sorting">Sorting</label>
     </p-iftalabel>
     <p-iftalabel>
-      <p-select id="type" [options]="types" [(ngModel)]="nameVariant.type" [editable]="true" name="type"
-                appendTo="body" showClear required fluid />
+      <p-select id="type" [options]="typeOptions" [(ngModel)]="nameVariant.type" name="type"
+                appendTo="body" required fluid placeholder="Select an option" />
       <label for="type">Type</label>
+    </p-iftalabel>
+    <p-iftalabel>
+      <p-select id="localization" [options]="localizationOptions" [(ngModel)]="nameVariant.localization" name="localization"
+                appendTo="body" required fluid placeholder="Select an option" />
+      <label for="type">Localization</label>
+    </p-iftalabel>
+    <p-iftalabel>
+      <input id="script" name="script"
+             [(ngModel)]="nameVariant.script"
+             pInputText fluid />
+      <label for="script">Script code (ISO 15924)</label>
+    </p-iftalabel>
+    <p-iftalabel>
+      <input id="language" name="language"
+             [(ngModel)]="nameVariant.language"
+             pInputText fluid />
+      <label for="language">Language code (ISO 639)</label>
     </p-iftalabel>
   </form>
 
