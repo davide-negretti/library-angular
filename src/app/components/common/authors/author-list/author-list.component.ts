@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
@@ -9,7 +8,7 @@ import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({
   selector: 'l-author-list',
-  imports: [PaginatorModule, TableModule, ButtonModule, RouterLink],
+  imports: [PaginatorModule, TableModule, ButtonModule],
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.scss',
 })

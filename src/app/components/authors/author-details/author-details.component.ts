@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { PanelModule } from 'primeng/panel';
 import { Author, AuthorNameVariant } from '../../../interfaces/models/author.model';
 import { AuthorService } from '../../../services/rest/author.service';
 import { AuthorNameVariantsComponent } from '../../common/authors/author-name-variants/author-name-variants.component';
@@ -7,6 +8,7 @@ import { AuthorNameVariantsComponent } from '../../common/authors/author-name-va
   selector: 'l-author-details',
   imports: [
     AuthorNameVariantsComponent,
+    PanelModule,
   ],
   templateUrl: './author-details.component.html',
   styleUrl: './author-details.component.scss',

@@ -228,6 +228,6 @@ export class AuthorNameVariantsComponent implements OnInit {
     if (nameVariant.language) {
       langAndScript.push(nameVariant.language);
     }
-    return langAndScript.join(' / ');
+    return langAndScript.join(' : ');
   }
 }
