@@ -8,8 +8,8 @@ import { InputText } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { Tooltip } from 'primeng/tooltip';
 import { take } from 'rxjs';
-import { AuthorNameVariantSearchResultDto } from '../../../../interfaces/dtos/author-name-variant-search-result.dto';
-import { AuthorService } from '../../../../services/rest/author.service';
+import { AuthorNameVariantSearchResultDto } from '../../../interfaces/dtos/author-name-variant-search-result.dto';
+import { AuthorService } from '../../../services/rest/author.service';
 
 interface LoadedData {
   id: string;
@@ -17,7 +17,7 @@ interface LoadedData {
 }
 
 @Component({
-  selector: 'l-search-author',
+  selector: 'l-legacy-search-author',
   standalone: true,
   imports: [
     FloatLabel,
@@ -29,10 +29,10 @@ interface LoadedData {
     JsonPipe,
     Tooltip,
   ],
-  templateUrl: './search-author.component.html',
-  styleUrl: './search-author.component.scss',
+  templateUrl: './legacy-search-author.component.html',
+  styleUrl: './legacy-search-author.component.scss',
 })
-export class SearchAuthorComponent {
+export class LegacySearchAuthorComponent {
   service = inject(AuthorService);
 
   searchQuery = '';

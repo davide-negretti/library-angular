@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectAuthorComponent } from './select-author.component';
+import { LegacySelectAuthorComponent } from './legacy-select-author.component';
 
 describe('SelectAuthorComponent', () => {
-  let component: SelectAuthorComponent;
-  let fixture: ComponentFixture<SelectAuthorComponent>;
+  let component: LegacySelectAuthorComponent;
+  let fixture: ComponentFixture<LegacySelectAuthorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectAuthorComponent],
+      imports: [LegacySelectAuthorComponent],
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(SelectAuthorComponent);
+    fixture = TestBed.createComponent(LegacySelectAuthorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

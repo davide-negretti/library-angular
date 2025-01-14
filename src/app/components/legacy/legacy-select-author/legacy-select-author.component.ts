@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { AuthorNameVariantsComponent } from '../common/authors/author-name-variants/author-name-variants.component';
-import { CreateAuthorComponent } from '../common/authors/create-author/create-author.component';
-import { SearchAuthorComponent } from '../common/authors/search-author/search-author.component';
+import { AuthorNameVariantsComponent } from '../../common/authors/author-name-variants/author-name-variants.component';
+import { CreateAuthorComponent } from '../../common/authors/create-author/create-author.component';
+import { LegacySearchAuthorComponent } from '../legacy-search-author/legacy-search-author.component';
 
 enum SelectAuthorStep {
   SEARCH,
@@ -17,17 +17,17 @@ Search > Review > Confirm
  */
 
 @Component({
-  selector: 'l-select-author',
+  selector: 'l-legacy-select-author',
   standalone: true,
   imports: [
     AuthorNameVariantsComponent,
-    SearchAuthorComponent,
+    LegacySearchAuthorComponent,
     CreateAuthorComponent,
   ],
-  templateUrl: './select-author.component.html',
-  styleUrl: './select-author.component.scss',
+  templateUrl: './legacy-select-author.component.html',
+  styleUrl: './legacy-select-author.component.scss',
 })
-export class SelectAuthorComponent {
+export class LegacySelectAuthorComponent {
   step = signal(SelectAuthorStep.SEARCH);
 
   protected readonly SelectAuthorStep = SelectAuthorStep;

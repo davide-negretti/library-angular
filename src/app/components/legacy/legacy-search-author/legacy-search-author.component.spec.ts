@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchAuthorComponent } from './search-author.component';
+import { LegacySearchAuthorComponent } from './legacy-search-author.component';
 
 describe('SelectAuthorComponent', () => {
-  let component: SearchAuthorComponent;
-  let fixture: ComponentFixture<SearchAuthorComponent>;
+  let component: LegacySearchAuthorComponent;
+  let fixture: ComponentFixture<LegacySearchAuthorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchAuthorComponent],
+      imports: [LegacySearchAuthorComponent],
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(SearchAuthorComponent);
+    fixture = TestBed.createComponent(LegacySearchAuthorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,6 @@
 @switch (step()) {
   @case (SelectAuthorStep.SEARCH) {
-    <l-search-author
+    <l-legacy-search-author
       (selectedAuthorId)="onAuthorSelected($event)"
       (addNewAuthor)="onAddNewAuthor($event)" />
   }
