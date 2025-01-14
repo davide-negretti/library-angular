@@ -40,7 +40,7 @@ export class MainMenuComponent {
   ];
 
   toggleDarkMode() {
-    document.querySelector('html')?.classList.toggle('dark-mode');
+    document.querySelector('html')?.classList.toggle('dark');
     document.querySelector('main')?.classList.toggle('dark:prose-invert');
   }
 }

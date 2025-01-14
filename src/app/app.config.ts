@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         preset: PrimeNgPreset,
         options: {
-          darkModeSelector: '.dark-mode',
+          darkModeSelector: '.dark',
         },
       },
     }),
