@@ -52,13 +52,15 @@
     <label for="language">Language code (ISO 639)</label>
   </p-iftalabel>
 
+  <div class="flex justify-center">
+    <p-buttonGroup>
+      <ng-content select="p-button">
+        <p-button label="Save" (click)="saveAuthor()"
+                  [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
+                  type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
+      </ng-content>
+    </p-buttonGroup>
+  </div>
 
-  <p-buttonGroup>
-    <ng-content select="p-button">
-      <p-button label="Save" (click)="saveAuthor()"
-                [icon]="isSavingAuthor ? 'pi pi-spin pi-spinner' : 'pi pi-save'" severity="success"
-                type="submit" [disabled]="isSavingAuthor || authorForm.invalid" />
-    </ng-content>
-  </p-buttonGroup>
-
+  {{ authorForm.valid}}
 </form>

@@ -6,8 +6,10 @@
         <ng-template #content>
           <l-create-author (authorSaved)="onAuthorSaved($event)" #createAuthorComponent>
             <p-button size="small" severity="success" icon="pi pi-replay" iconPos="right"
+                      [disabled]="createAuthorComponent?.isSaveButtonDisabled"
                       (click)="saveAndRestart()" label="Save and create new"></p-button>
             <p-button size="small" severity="secondary" icon="pi pi-arrow-circle-right" iconPos="right"
+                      [disabled]="createAuthorComponent?.isSaveButtonDisabled"
                       (click)="saveAndNext()" label="Save and continue"></p-button>
           </l-create-author>
         </ng-template>

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, inject, Output, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
@@ -34,8 +34,9 @@ import { AuthorService } from '../../../../services/rest/author.service';
 export class CreateAuthorComponent {
   @Output() authorSaved = new EventEmitter<Author>();
 
-  isSavingAuthor = false;
+  @ViewChild('authorForm', { static: true }) authorForm!: NgForm;
 
+  isSavingAuthor = false;
   nameVariantDisplay = '';
   nameVariantSorting = '';
   nameVariantType = '';
@@ -45,7 +46,6 @@ export class CreateAuthorComponent {
   language = '';
 
   computedNameVariantDisplay = this.nameVariantDisplay;
-
   nameVariantTypeOptions = Object.values(AuthorNameVariantType);
   nameVariantLocalizationOptions = Object.values(AuthorNameVariantLocalization);
   authorTypeOptions = Object.values(AuthorType);
@@ -53,12 +53,16 @@ export class CreateAuthorComponent {
   private readonly service = inject(AuthorService);
   private readonly messageService = inject(MessageService);
 
+  public get isSaveButtonDisabled() {
+    return this.isSavingAuthor || this.authorForm.invalid;
+  }
+
   public saveAuthor() {
     const author: CreateAuthorDto = {
       display: this.nameVariantDisplay,
       sorting: this.nameVariantSorting,
-      mainNameVariantType: 'original', // TODO fix
-      authorType: 'person', // TODO fix
+      mainNameVariantType: this.nameVariantType,
+      authorType: this.authorType,
       localization: this.nameVariantLocalization,
       script: this.script.length ? this.script : undefined,
       language: this.language.length ? this.language : undefined,
