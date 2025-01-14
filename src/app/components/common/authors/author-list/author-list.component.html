@@ -7,7 +7,8 @@
   [rowsPerPageOptions]="rowsPerPageOptions"
   [totalRecords]="totalRecords"
   [paginator]="true"
-  class="not-prose"
+  size="small"
+  styleClass="not-prose max-w-3xl mx-auto"
 >
   <ng-template #header>
     <tr>
@@ -17,9 +18,27 @@
   </ng-template>
   <ng-template pTemplate="body" let-author>
     <tr>
-      <td>{{ author.mainNameVariant.sorting }}</td>
       <td>
-        <p-button (click)="onAuthorSelected(author._id)" icon="pi pi-info" severity="info"></p-button>
+        {{ author.mainNameVariant.sorting }}
+        @if (author.firstMatchingNameVariant) {
+          <em class="text-surface-400 dark:text-surface-500">as {{ author.firstMatchingNameVariant.display }}</em>
+        }
+      </td>
+      <td>
+        <p-buttonGroup>
+          @if (showInfoButton) {
+            <p-button (click)="onShowAuthorInfo(author._id)" icon="pi pi-info" severity="info" size="small"></p-button>
+          }
+          @if (showSelectButton) {
+            @if (selectedAuthors.getValue().indexOf(author._id) < 0) {
+              <p-button (click)="onSelectAuthor(author._id)" icon="pi pi-check-circle" severity="secondary"
+                        size="small"></p-button>
+            } @else {
+              <p-button (click)="onUnselectAuthor(author._id)" icon="pi pi-check-circle" severity="success"
+                        size="small"></p-button>
+            }
+          }
+        </p-buttonGroup>
       </td>
     </tr>
   </ng-template>
