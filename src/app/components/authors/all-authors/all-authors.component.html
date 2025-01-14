@@ -1,1 +1,3 @@
-<l-author-list (authorSelected)="showAuthor($event)"/>
+<div class="flex flex-col gap-6">
+  <l-author-list (showAuthorInfo)="showAuthor($event)" [query]="query" [showInfoButton]="true" />
+</div>

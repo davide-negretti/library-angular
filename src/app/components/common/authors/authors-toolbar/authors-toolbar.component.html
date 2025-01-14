@@ -1,0 +1,14 @@
+<p-toolbar>
+  <ng-template #start>
+    <p-button icon="pi pi-plus" class="mr-2" text severity="secondary" label="Add" />
+  </ng-template>
+  <ng-template #center>
+    <form #searchForm="ngForm" (ngSubmit)="onSubmit()">
+      <p-iconfield iconPosition="left">
+        <p-inputicon styleClass="pi pi-search" />
+        <input type="text" name="searchAuthor" pInputText placeholder="Search author" [(ngModel)]="searchField" />
+      </p-iconfield>
+    </form>
+  </ng-template>
+  <ng-template #end></ng-template>
+</p-toolbar>
