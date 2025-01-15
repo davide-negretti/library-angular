@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthorListComponent } from '../../common/authors/author-list/author-list.component';
 
@@ -11,7 +11,7 @@ import { AuthorListComponent } from '../../common/authors/author-list/author-lis
   styleUrl: './all-authors.component.scss',
 })
 export class AllAuthorsComponent {
-  @Input() query: string | undefined; // from query parameter
+  readonly query = input<string>(); // from query parameter
 
   private router = inject(Router);
 
