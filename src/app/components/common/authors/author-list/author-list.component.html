@@ -1,7 +1,7 @@
 <p-table
   [lazy]="true"
   (onLazyLoad)="loadData($event)"
-  [value]="currentPageData"
+  [value]="(currentPageData.asObservable() | async)!"
   [first]="first"
   [rows]="rows"
   [rowsPerPageOptions]="rowsPerPageOptions"

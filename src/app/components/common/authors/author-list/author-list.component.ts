@@ -1,4 +1,14 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { PaginatorModule } from 'primeng/paginator';
@@ -16,9 +26,10 @@ interface FilteredAuthorSearchResult {
 
 @Component({
   selector: 'l-author-list',
-  imports: [PaginatorModule, TableModule, ButtonModule, ButtonGroupModule],
+  imports: [PaginatorModule, TableModule, ButtonModule, ButtonGroupModule, AsyncPipe],
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorListComponent implements OnChanges {
   @Input() query: string | undefined;
@@ -43,9 +54,10 @@ export class AuthorListComponent implements OnChanges {
 
   totalRecords = 0;
 
-  currentPageData: FilteredAuthorSearchResult[] = [];
+  currentPageData = new BehaviorSubject<FilteredAuthorSearchResult[]>([]);
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
     if (changes['query'].currentValue !== changes['query'].previousValue) {
       const firstPage: TableLazyLoadEvent = {
         first: 0,
@@ -55,7 +67,6 @@ export class AuthorListComponent implements OnChanges {
         this.regExpArray = this.queryToRegExp(this.query);
       }
       if (!changes['query'].firstChange) {
-        // the first load is managed by the table's onLazyLoad() callback
         this.loadData(firstPage);
       }
     }
@@ -75,11 +86,11 @@ export class AuthorListComponent implements OnChanges {
     this.rows = loadEvent.rows ?? this.defaultRows;
 
     this.service.findAuthors(this.query, { from: this.first, pageSize: this.rows }).pipe(take(1)).subscribe((res) => {
-      this.currentPageData = res.data.map(author => ({
+      this.currentPageData.next(res.data.map(author => ({
         _id: author._id,
         mainNameVariant: author.mainNameVariant,
         firstMatchingNameVariant: this.getFirstMatchingVariant(author),
-      }));
+      })));
       this.totalRecords = res.pagination.totalCount;
     });
   }
