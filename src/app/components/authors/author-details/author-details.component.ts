@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { Author, AuthorNameVariant } from '../../../interfaces/models/author.model';
 import { AuthorService } from '../../../services/rest/author.service';
@@ -13,14 +13,12 @@ import { AuthorNameVariantsComponent } from '../../common/authors/author-name-va
   templateUrl: './author-details.component.html',
   styleUrl: './author-details.component.scss',
 })
-export class AuthorDetailsComponent implements OnInit {
+export class AuthorDetailsComponent {
   service = inject(AuthorService);
 
-  @Input({ required: true }) author!: Author;
+  readonly author = input.required<Author>();
 
-  mainVariant: AuthorNameVariant | undefined;
-
-  ngOnInit() {
-    this.mainVariant = this.author.nameVariants.find((nameVariant: AuthorNameVariant) => nameVariant._id === this.author.mainVariantId);
-  }
+  readonly mainVariant = computed<AuthorNameVariant | undefined>(() =>
+    this.author().nameVariants.find((nameVariant: AuthorNameVariant) => nameVariant._id === this.author().mainVariantId),
+  );
 }
