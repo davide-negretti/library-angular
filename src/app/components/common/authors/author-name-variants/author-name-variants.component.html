@@ -24,7 +24,7 @@
         <div class="flex gap-3">
           <p-tag [severity]="main ? 'success' : 'info'" [icon]="main ? 'pi pi-bookmark' : undefined"
                  [value]="nameVariant.type" rounded />
-          @if (nameVariant.length && nameVariant.localization !== 'original') {
+          @if (nameVariant.localization?.length && nameVariant.localization !== 'original') {
             <p-tag severity="secondary" [value]="nameVariant.localization" rounded />
           }
           @let langAndScript = getLangAndScript(nameVariant);
