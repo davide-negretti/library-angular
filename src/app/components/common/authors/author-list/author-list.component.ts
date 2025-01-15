@@ -4,7 +4,7 @@ import {
   Component,
   EventEmitter,
   inject,
-  Input,
+  input,
   OnChanges,
   Output,
   SimpleChanges,
@@ -32,47 +32,48 @@ interface FilteredAuthorSearchResult {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorListComponent implements OnChanges {
-  @Input() query: string | undefined;
-  @Input() showInfoButton = false;
-  @Input() showSelectButton = false;
+  readonly query = input<string>();
+  readonly showInfoButton = input(false);
+  readonly showSelectButton = input(false);
 
   @Output() showAuthorInfo = new EventEmitter<string>();
   @Output() selectAuthor = new EventEmitter<string>();
   @Output() unselectAuthor = new EventEmitter<string>();
 
-  selectedAuthors = new BehaviorSubject<string[]>([]);
+  protected readonly rowsPerPageOptions = [5, 10, 20, 50];
+  protected readonly defaultRows = 10;
 
-  service = inject(AuthorService);
+  protected totalRecords = 0;
+  protected selectedAuthors = new BehaviorSubject<string[]>([]);
+  protected first = 0;
+  protected rows = this.defaultRows;
+  private readonly service = inject(AuthorService);
+  private regExpArray: RegExp[] = [];
+  private currentPageData = new BehaviorSubject<FilteredAuthorSearchResult[]>([]);
 
-  readonly rowsPerPageOptions = [5, 10, 20, 50];
-  readonly defaultRows = 10;
-
-  first = 0;
-  rows = this.defaultRows;
-
-  regExpArray: RegExp[] = [];
-
-  totalRecords = 0;
-
-  currentPageData = new BehaviorSubject<FilteredAuthorSearchResult[]>([]);
+  protected currentPageData$ = this.currentPageData.asObservable();
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes['query'].currentValue !== changes['query'].previousValue) {
-      const firstPage: TableLazyLoadEvent = {
-        first: 0,
-        rows: this.rows,
-      };
-      if (this.query) {
-        this.regExpArray = this.queryToRegExp(this.query);
-      }
-      if (!changes['query'].firstChange) {
-        this.loadData(firstPage);
-      }
+      this.onQueryChange(changes['query'].firstChange);
     }
   }
 
-  queryToRegExp(query: string): RegExp[] {
+  private onQueryChange(isFirstChange: boolean): void {
+    const firstPage: TableLazyLoadEvent = {
+      first: 0,
+      rows: this.rows,
+    };
+    const query = this.query();
+    if (query) {
+      this.regExpArray = this.queryToRegExp(query);
+    }
+    if (!isFirstChange) {
+      this.loadData(firstPage);
+    }
+  }
+
+  private queryToRegExp(query: string): RegExp[] {
     if (query.trim().length) {
       const wordArray = query.split(' ');
       return wordArray.map(word => new RegExp(word.toLowerCase(), 'i'));
@@ -85,7 +86,7 @@ export class AuthorListComponent implements OnChanges {
     this.first = loadEvent.first ?? 0;
     this.rows = loadEvent.rows ?? this.defaultRows;
 
-    this.service.findAuthors(this.query, { from: this.first, pageSize: this.rows }).pipe(take(1)).subscribe((res) => {
+    this.service.findAuthors(this.query(), { from: this.first, pageSize: this.rows }).pipe(take(1)).subscribe((res) => {
       this.currentPageData.next(res.data.map(author => ({
         _id: author._id,
         mainNameVariant: author.mainNameVariant,
@@ -95,21 +96,29 @@ export class AuthorListComponent implements OnChanges {
     });
   }
 
-  onShowAuthorInfo(_id: string) {
+  public resetSelectedAuthors() {
+    this.selectedAuthors.next([]);
+  }
+
+  protected onShowAuthorInfo(_id: string) {
     this.showAuthorInfo.emit(_id);
   }
 
-  onSelectAuthor(_id: string) {
+  protected onSelectAuthor(_id: string) {
     this.selectedAuthors.next([...this.selectedAuthors.getValue(), _id]);
     this.selectAuthor.emit(_id);
   }
 
-  onUnselectAuthor(_id: string) {
+  protected onUnselectAuthor(_id: string) {
     this.selectedAuthors.next([...this.selectedAuthors.getValue().filter(id => id !== _id)]);
     this.selectAuthor.emit(_id);
   }
 
-  getFirstMatchingVariant(author: AuthorSearchResultDto): AuthorNameVariant | undefined {
+  protected isSelectedAuthor(id: string) {
+    return this.selectedAuthors.getValue().includes(id);
+  }
+
+  private getFirstMatchingVariant(author: AuthorSearchResultDto): AuthorNameVariant | undefined {
     const mainVariantMatches = this.regExpArray.every(regExp => regExp.test(author.mainNameVariant.display));
     const firstMatchingNameVariant = author.matchingNameVariants?.length ? author.matchingNameVariants[0] : undefined;
     return (!mainVariantMatches && firstMatchingNameVariant) ? firstMatchingNameVariant : undefined;

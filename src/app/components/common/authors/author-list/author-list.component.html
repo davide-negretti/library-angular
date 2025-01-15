@@ -1,7 +1,7 @@
 <p-table
   [lazy]="true"
   (onLazyLoad)="loadData($event)"
-  [value]="(currentPageData.asObservable() | async)!"
+  [value]="(currentPageData$ | async)!"
   [first]="first"
   [rows]="rows"
   [rowsPerPageOptions]="rowsPerPageOptions"
@@ -9,6 +9,8 @@
   [paginator]="true"
   size="small"
   styleClass="not-prose max-w-3xl mx-auto l-shrink-last-column"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
 >
   <ng-template #header>
     <tr>
@@ -26,15 +28,15 @@
       </td>
       <td>
         <p-buttonGroup>
-          @if (showInfoButton) {
+          @if (showInfoButton()) {
             <p-button (click)="onShowAuthorInfo(author._id)" icon="pi pi-info" severity="info" size="small"></p-button>
           }
-          @if (showSelectButton) {
-            @if (selectedAuthors.getValue().indexOf(author._id) < 0) {
-              <p-button (click)="onSelectAuthor(author._id)" icon="pi pi-check-circle" severity="secondary"
+          @if (showSelectButton()) {
+            @if (isSelectedAuthor(author._id)) {
+              <p-button (click)="onUnselectAuthor(author._id)" icon="pi pi-check-circle" severity="success"
                         size="small"></p-button>
             } @else {
-              <p-button (click)="onUnselectAuthor(author._id)" icon="pi pi-check-circle" severity="success"
+              <p-button (click)="onSelectAuthor(author._id)" icon="pi pi-check-circle" severity="secondary"
                         size="small"></p-button>
             }
           }
