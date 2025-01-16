@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, model, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -25,7 +25,7 @@ import { AuthorService } from '../../../../services/rest/author.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorNameVariantsComponent {
-  author = input.required<Author>();
+  author = model.required<Author>();
 
   @ViewChild('nameVariantForm') protected nameVariantForm: NgForm | undefined;
 
@@ -91,22 +91,25 @@ export class AuthorNameVariantsComponent {
     this.isSavingNameVariant = true;
     this.service.saveNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
-        // TODO: emit updated author (and update input signal?)
-        this.nameVariants.next([...updatedAuthor.nameVariants]);
-        this.isSavingNameVariant = false;
+        this.author.set(updatedAuthor);
         this.messageService.add({
           severity: 'success',
           summary: 'Updated',
           detail: `Name variant "${this.nameVariant.display ?? ''}" has been updated.`,
         });
         this.closeEditDialog();
-      }, error: (error) => {
+      },
+      error: (error) => {
         console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be updated.`,
         });
+      },
+      complete: () => {
+        this.isSavingNameVariant = false;
+        this.nameVariant = {};
       },
     });
   }
@@ -115,8 +118,7 @@ export class AuthorNameVariantsComponent {
     this.isSavingNameVariant = true;
     this.service.addNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
-        // TODO: emit updated author (and update input signal?)
-        this.nameVariants.next([...updatedAuthor.nameVariants]);
+        this.author.set(updatedAuthor);
         this.isSavingNameVariant = false;
         this.messageService.add({
           detail: `Name variant "${this.nameVariant.display ?? ''}" has been added.`,
@@ -124,13 +126,18 @@ export class AuthorNameVariantsComponent {
           summary: 'Added',
         });
         this.closeEditDialog();
-      }, error: (error) => {
+      },
+      error: (error) => {
         console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be added.`,
         });
+      },
+      complete: () => {
+        this.isSavingNameVariant = false;
+        this.nameVariant = {};
       },
     });
   }
@@ -140,19 +147,23 @@ export class AuthorNameVariantsComponent {
       accept: () => {
         this.service.deleteNameVariant(this.author()._id, nameVariant._id).pipe(take(1)).subscribe({
           next: (updatedAuthor) => {
-            // TODO: emit updated author (and update input signal?)
-            this.nameVariants.next([...updatedAuthor.nameVariants]);
+            this.author.set(updatedAuthor);
             this.messageService.add({
               severity: 'success',
               summary: 'Deleted',
               detail: `Name variant "${nameVariant.display}" has been deleted.`,
             });
-          }, error: () => {
+          },
+          error: () => {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
               detail: `An error occurred. Name variant "${nameVariant.display}" has not been deleted.`,
             });
+          },
+          complete: () => {
+            this.isSavingNameVariant = false;
+            this.nameVariant = {};
           },
         });
       },
