@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, ViewChild } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, effect, inject, input, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -13,8 +12,8 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
-import { BehaviorSubject, distinctUntilChanged, map, switchMap, take, tap } from 'rxjs';
-import { AuthorNameVariant } from '../../../../interfaces/models/author.model';
+import { BehaviorSubject, map, take, tap } from 'rxjs';
+import { Author, AuthorNameVariant } from '../../../../interfaces/models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
 
 @Component({
@@ -26,13 +25,14 @@ import { AuthorService } from '../../../../services/rest/author.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorNameVariantsComponent {
-  authorId = input.required<string>();
+  author = input.required<Author>();
 
   @ViewChild('nameVariantForm') protected nameVariantForm: NgForm | undefined;
 
   protected nameVariant: Partial<AuthorNameVariant> = {};
   protected showNameVariantDialog = false;
   protected isSavingNameVariant = false;
+
   protected readonly typeOptions = ['original', 'short', 'pseudonym'];
   protected readonly localizationOptions = ['original', 'transliterated', 'translated'];
 
@@ -44,24 +44,13 @@ export class AuthorNameVariantsComponent {
   protected nameVariants$ = this.nameVariants.asObservable();
   private mainVariantId = new BehaviorSubject<string | undefined>(undefined);
 
-  protected readonly author = toObservable<string>(this.authorId).pipe(
-    distinctUntilChanged(),
-    switchMap(authorId => this.service.getById(authorId)),
-    take(1),
-  ).subscribe({
-    next: (author) => {
-      const variantRecord: Record<string, boolean> = {};
-      for (const variant of author.nameVariants) {
-        variantRecord[variant._id] = false;
-      }
-      this.nameVariants.next([...author.nameVariants]);
-      this.mainVariantId.next(author.mainVariantId);
-    }, error: (error) => {
-      console.error(error);
-      this.messageService.add({
-        severity: 'error', summary: 'Error', detail: `An error occurred. Author data cannot be loaded.`,
-      });
-    },
+  private readonly updateVariantsEffect = effect(() => {
+    const variantRecord: Record<string, boolean> = {};
+    for (const variant of this.author().nameVariants) {
+      variantRecord[variant._id] = false;
+    }
+    this.nameVariants.next([...this.author().nameVariants]);
+    this.mainVariantId.next(this.author().mainVariantId);
   });
 
   isMainVariant(variant: AuthorNameVariant) {
@@ -69,7 +58,7 @@ export class AuthorNameVariantsComponent {
   }
 
   onSetMainVariant(variant: AuthorNameVariant) {
-    this.service.setMainVariant(this.authorId(), variant._id).pipe(take(1), tap((res) => {
+    this.service.setMainVariant(this.author()._id, variant._id).pipe(take(1), tap((res) => {
       if (res.mainVariantId !== variant._id) {
         throw new Error('Unable to set main variant');
       }
@@ -100,8 +89,9 @@ export class AuthorNameVariantsComponent {
 
   onSaveNameVariant() { // TODO
     this.isSavingNameVariant = true;
-    this.service.saveNameVariant(this.authorId(), this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
+    this.service.saveNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
+        // TODO: emit updated author (and update input signal?)
         this.nameVariants.next([...updatedAuthor.nameVariants]);
         this.isSavingNameVariant = false;
         this.messageService.add({
@@ -123,8 +113,9 @@ export class AuthorNameVariantsComponent {
 
   onAddNameVariant() { // TODO
     this.isSavingNameVariant = true;
-    this.service.addNameVariant(this.authorId(), this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
+    this.service.addNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
+        // TODO: emit updated author (and update input signal?)
         this.nameVariants.next([...updatedAuthor.nameVariants]);
         this.isSavingNameVariant = false;
         this.messageService.add({
@@ -147,8 +138,9 @@ export class AuthorNameVariantsComponent {
   onDeleteVariant(nameVariant: AuthorNameVariant) {
     this.confirmationService.confirm({
       accept: () => {
-        this.service.deleteNameVariant(this.authorId(), nameVariant._id).pipe(take(1)).subscribe({
+        this.service.deleteNameVariant(this.author()._id, nameVariant._id).pipe(take(1)).subscribe({
           next: (updatedAuthor) => {
+            // TODO: emit updated author (and update input signal?)
             this.nameVariants.next([...updatedAuthor.nameVariants]);
             this.messageService.add({
               severity: 'success',

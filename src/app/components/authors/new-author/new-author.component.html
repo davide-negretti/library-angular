@@ -20,7 +20,7 @@
       <p-step-panel>
         <ng-template #content>
           @if (this.author) {
-            <l-author-name-variants [authorId]="this.author._id">
+            <l-author-name-variants [author]="this.author">
               <p-button size="small" severity="secondary" icon="pi pi-arrow-circle-right" iconPos="right"
                         (click)="nextStep()" label="Next"></p-button>
             </l-author-name-variants>

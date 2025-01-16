@@ -21,7 +21,7 @@
   <ng-template pTemplate="body" let-author>
     <tr>
       <td>
-        {{ author.mainNameVariant.sorting }}
+        {{ author.mainNameVariant?.sorting }}
         @if (author.firstMatchingNameVariant) {
           <em class="text-surface-400 dark:text-surface-500">as {{ author.firstMatchingNameVariant.display }}</em>
         }
