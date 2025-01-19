@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, input, model, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -16,6 +16,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { BehaviorSubject, map, take, tap } from 'rxjs';
 import { Author, AuthorNameVariant } from '../../../../interfaces/models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
+import { NotificationService } from '../../../../services/ui/notification.service';
 
 @Component({
   selector: 'l-author-name-variants',
@@ -54,7 +55,7 @@ export class AuthorNameVariantsComponent {
   protected readonly localizationOptions = ['original', 'transliterated', 'translated'];
 
   private readonly confirmationService = inject(ConfirmationService);
-  private readonly messageService = inject(MessageService);
+  private readonly notificationService = inject(NotificationService);
   private readonly service = inject(AuthorService);
 
   private nameVariants = new BehaviorSubject<AuthorNameVariant[]>([]);
@@ -84,11 +85,7 @@ export class AuthorNameVariantsComponent {
         this.mainVariantId.next(res.mainVariantId);
       }, error: (error) => {
         console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `An error occurred. Name variant "${variant.display}" cannot be set as main.`,
-        });
+        this.notificationService.error('Error', `An error occurred. Name variant "${variant.display}" cannot be set as main.`);
       },
     });
   }
@@ -109,20 +106,12 @@ export class AuthorNameVariantsComponent {
     this.service.saveNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
         this.author.set(updatedAuthor);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Updated',
-          detail: `Name variant "${this.nameVariant.display ?? ''}" has been updated.`,
-        });
+        this.notificationService.success('Updated', `Name variant "${this.nameVariant.display ?? ''}" has been updated.`);
         this.closeEditDialog();
       },
       error: (error) => {
         console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be updated.`,
-        });
+        this.notificationService.error('Error', `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be updated.`);
       },
       complete: () => {
         this.isSavingNameVariant = false;
@@ -137,20 +126,12 @@ export class AuthorNameVariantsComponent {
       next: (updatedAuthor) => {
         this.author.set(updatedAuthor);
         this.isSavingNameVariant = false;
-        this.messageService.add({
-          detail: `Name variant "${this.nameVariant.display ?? ''}" has been added.`,
-          severity: 'success',
-          summary: 'Added',
-        });
+        this.notificationService.success('Added', `Name variant "${this.nameVariant.display ?? ''}" has been added.`);
         this.closeEditDialog();
       },
       error: (error) => {
         console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be added.`,
-        });
+        this.notificationService.error('Error', `An error occurred. Name variant "${this.nameVariant.display ?? ''}" cannot be added.`);
       },
       complete: () => {
         this.isSavingNameVariant = false;
@@ -165,18 +146,10 @@ export class AuthorNameVariantsComponent {
         this.service.deleteNameVariant(this.author()._id, nameVariant._id).pipe(take(1)).subscribe({
           next: (updatedAuthor) => {
             this.author.set(updatedAuthor);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Deleted',
-              detail: `Name variant "${nameVariant.display}" has been deleted.`,
-            });
+            this.notificationService.success('Deleted', `Name variant "${nameVariant.display}" has been deleted.`);
           },
           error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: `An error occurred. Name variant "${nameVariant.display}" has not been deleted.`,
-            });
+            this.notificationService.error('Error', `An error occurred. Name variant "${nameVariant.display}" has not been deleted.`);
           },
           complete: () => {
             this.isSavingNameVariant = false;

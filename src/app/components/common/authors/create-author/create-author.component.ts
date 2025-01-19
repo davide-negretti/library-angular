@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ButtonGroup } from 'primeng/buttongroup';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -16,6 +15,7 @@ import {
   AuthorType,
 } from '../../../../interfaces/models/author.model';
 import { AuthorService } from '../../../../services/rest/author.service';
+import { NotificationService } from '../../../../services/ui/notification.service';
 
 @Component({
   selector: 'l-create-author',
@@ -51,7 +51,7 @@ export class CreateAuthorComponent {
   authorTypeOptions = Object.values(AuthorType);
 
   private readonly service = inject(AuthorService);
-  private readonly messageService = inject(MessageService);
+  private readonly notificationService = inject(NotificationService);
 
   public get isSaveButtonDisabled() {
     return this.isSavingAuthor || this.authorForm.invalid;
@@ -74,11 +74,7 @@ export class CreateAuthorComponent {
       },
       error: (error) => {
         console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `An error occurred. Author cannot be saved.`,
-        });
+        this.notificationService.error('Error', `An error occurred. Author cannot be saved.`);
       },
     });
   }
