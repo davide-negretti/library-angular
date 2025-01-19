@@ -119,12 +119,14 @@
     <p-iftalabel>
       <input id="script" name="script"
              [(ngModel)]="nameVariant.script"
+             pattern="[A-Z][a-z]{3}"
              pInputText fluid />
       <label for="script">Script code (ISO 15924)</label>
     </p-iftalabel>
     <p-iftalabel>
       <input id="language" name="language"
              [(ngModel)]="nameVariant.language"
+             pattern="[a-z]{3}"
              pInputText fluid />
       <label for="language">Language code (ISO 639)</label>
     </p-iftalabel>
