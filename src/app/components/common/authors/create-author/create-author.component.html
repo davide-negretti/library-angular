@@ -35,19 +35,17 @@
               appendTo="body" />
     <label for="name-variant-type">Name variant localization</label>
   </p-iftalabel>
-
-
   <p-iftalabel>
     <input id="script" name="script"
            [(ngModel)]="script"
-           placeholder="Latn"
+           placeholder="Latn" pattern="[A-Z][a-z]{3}"
            pInputText fluid />
     <label for="script">Script code (ISO 15924)</label>
   </p-iftalabel>
   <p-iftalabel>
     <input id="language" name="language"
            [(ngModel)]="language"
-           placeholder="eng"
+           placeholder="eng" pattern="[a-z]{3}"
            pInputText fluid />
     <label for="language">Language code (ISO 639)</label>
   </p-iftalabel>
