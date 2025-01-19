@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -23,9 +24,14 @@ import { Toolbar } from 'primeng/toolbar';
 export class AuthorsToolbarComponent {
   @Output() searchQuery = new EventEmitter<string>();
 
-  searchField = '';
+  protected searchField = '';
+  private router = inject(Router);
 
-  onSubmit() {
+  protected onSubmit() {
     this.searchQuery.emit(this.searchField);
+  }
+
+  protected async onAddAuthor() {
+    await this.router.navigate(['authors', 'new']);
   }
 }

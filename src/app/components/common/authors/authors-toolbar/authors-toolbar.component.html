@@ -1,6 +1,6 @@
 <p-toolbar>
   <ng-template #start>
-    <p-button icon="pi pi-plus" class="mr-2" text severity="secondary" label="Add" />
+    <p-button icon="pi pi-plus" class="mr-2" text severity="secondary" label="Add" (click)="onAddAuthor()" />
   </ng-template>
   <ng-template #center>
     <form #searchForm="ngForm" (ngSubmit)="onSubmit()">
