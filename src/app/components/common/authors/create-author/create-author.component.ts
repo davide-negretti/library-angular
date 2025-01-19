@@ -70,6 +70,7 @@ export class CreateAuthorComponent {
     this.service.createAuthor(author).pipe(take(1)).subscribe({
       next: (author: Author) => {
         this.authorSaved.emit(author);
+        this.authorForm.reset();
       },
       error: (error) => {
         console.error(error);
