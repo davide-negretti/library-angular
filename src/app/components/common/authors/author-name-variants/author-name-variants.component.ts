@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, model, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, model, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -8,6 +8,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Dialog } from 'primeng/dialog';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { PopoverModule } from 'primeng/popover';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
@@ -19,13 +20,29 @@ import { AuthorService } from '../../../../services/rest/author.service';
 @Component({
   selector: 'l-author-name-variants',
   standalone: true,
-  imports: [AsyncPipe, ButtonGroup, ButtonModule, ConfirmDialogModule, Dialog, IftaLabelModule, FormsModule, InputTextModule, SelectModule, TableModule, Tag, Tooltip],
+  imports: [
+    AsyncPipe,
+    ButtonGroup,
+    ButtonModule,
+    ConfirmDialogModule,
+    Dialog,
+    FormsModule,
+    IftaLabelModule,
+    InputTextModule,
+    PopoverModule,
+    SelectModule,
+    TableModule,
+    Tag,
+    Tooltip,
+  ],
   templateUrl: './author-name-variants.component.html',
   styleUrl: './author-name-variants.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorNameVariantsComponent {
   author = model.required<Author>();
+
+  compactView = input<boolean>(false);
 
   @ViewChild('nameVariantForm') protected nameVariantForm: NgForm | undefined;
 
