@@ -36,19 +36,21 @@ export class CreateAuthorComponent {
 
   @ViewChild('authorForm', { static: true }) authorForm!: NgForm;
 
-  isSavingAuthor = false;
-  nameVariantDisplay = '';
-  nameVariantSorting = '';
-  nameVariantType = '';
-  nameVariantLocalization = '';
-  authorType = '';
-  script = '';
-  language = '';
+  protected isSavingAuthor = false;
 
-  computedNameVariantDisplay = this.nameVariantDisplay;
-  nameVariantTypeOptions = Object.values(AuthorNameVariantType);
-  nameVariantLocalizationOptions = Object.values(AuthorNameVariantLocalization);
-  authorTypeOptions = Object.values(AuthorType);
+  protected nameVariantDisplay = '';
+  protected nameVariantSorting = '';
+  protected nameVariantType = '';
+  protected nameVariantLocalization = '';
+  protected authorType = '';
+  protected script = '';
+  protected language = '';
+
+  protected computedNameVariantDisplay = this.nameVariantDisplay;
+
+  protected readonly nameVariantTypeOptions = Object.values(AuthorNameVariantType);
+  protected readonly nameVariantLocalizationOptions = Object.values(AuthorNameVariantLocalization);
+  protected readonly authorTypeOptions = Object.values(AuthorType);
 
   private readonly service = inject(AuthorService);
   private readonly notificationService = inject(NotificationService);
@@ -79,7 +81,7 @@ export class CreateAuthorComponent {
     });
   }
 
-  fillDisplay() {
+  protected fillDisplay() {
     if (this.nameVariantDisplay === this.computedNameVariantDisplay && this.nameVariantSorting.includes(',')) {
       const indexOfComma = this.nameVariantSorting.indexOf(',');
       this.nameVariantDisplay = this.nameVariantSorting.slice(indexOfComma + 1).trim() + ' ' + this.nameVariantSorting.slice(0, indexOfComma).trim();
