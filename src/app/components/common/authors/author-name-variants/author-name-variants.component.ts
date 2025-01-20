@@ -71,11 +71,11 @@ export class AuthorNameVariantsComponent {
     this.mainVariantId.next(this.author().mainVariantId);
   });
 
-  isMainVariant(variant: AuthorNameVariant) {
+  protected isMainVariant(variant: AuthorNameVariant) {
     return this.mainVariantId.asObservable().pipe(map(mainVariantId => mainVariantId === variant._id));
   }
 
-  onSetMainVariant(variant: AuthorNameVariant) {
+  protected onSetMainVariant(variant: AuthorNameVariant) {
     this.service.setMainVariant(this.author()._id, variant._id).pipe(take(1), tap((res) => {
       if (res.mainVariantId !== variant._id) {
         throw new Error('Unable to set main variant');
@@ -90,18 +90,18 @@ export class AuthorNameVariantsComponent {
     });
   }
 
-  openEditDialog(nameVariant?: AuthorNameVariant) {
+  protected openEditDialog(nameVariant?: AuthorNameVariant) {
     this.nameVariantForm?.form.reset();
     this.nameVariant = nameVariant ? { ...nameVariant } : { /* default values, if any */ };
     this.showNameVariantDialog = true;
   }
 
-  closeEditDialog() {
+  protected closeEditDialog() {
     this.nameVariant = {};
     this.showNameVariantDialog = false;
   }
 
-  onSaveNameVariant() { // TODO
+  protected onSaveNameVariant() { // TODO
     this.isSavingNameVariant = true;
     this.service.saveNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
@@ -120,7 +120,7 @@ export class AuthorNameVariantsComponent {
     });
   }
 
-  onAddNameVariant() { // TODO
+  protected onAddNameVariant() { // TODO
     this.isSavingNameVariant = true;
     this.service.addNameVariant(this.author()._id, this.nameVariant as AuthorNameVariant).pipe(take(1)).subscribe({
       next: (updatedAuthor) => {
@@ -140,7 +140,7 @@ export class AuthorNameVariantsComponent {
     });
   }
 
-  onDeleteVariant(nameVariant: AuthorNameVariant) {
+  protected onDeleteVariant(nameVariant: AuthorNameVariant) {
     this.confirmationService.confirm({
       accept: () => {
         this.service.deleteNameVariant(this.author()._id, nameVariant._id).pipe(take(1)).subscribe({
@@ -170,7 +170,7 @@ export class AuthorNameVariantsComponent {
     });
   }
 
-  getLangAndScript(nameVariant: AuthorNameVariant) {
+  protected getLangAndScript(nameVariant: AuthorNameVariant) {
     const langAndScript: string[] = [];
     if (nameVariant.script) {
       langAndScript.push(nameVariant.script);

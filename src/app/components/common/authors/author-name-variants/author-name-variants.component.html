@@ -5,7 +5,9 @@
     @for (nameVariant of nameVariants; track nameVariant._id) {
       <li>
         {{ nameVariant.display }}
-        @if (isMainVariant(nameVariant) | async) { <i class="pi pi-bookmark"></i> }
+        @if (isMainVariant(nameVariant) | async) {
+          <i class="pi pi-bookmark"></i>
+        }
         <p-button (click)="info.toggle($event)" icon="pi pi-info-circle" severity="info" [link]="true" />
       </li>
       <p-popover #info>
