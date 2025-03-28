@@ -29,7 +29,7 @@ import { NotificationService } from '../../../../services/ui/notification.servic
     ButtonGroup,
   ],
   templateUrl: './create-author.component.html',
-  styleUrl: './create-author.component.scss',
+  styleUrl: './create-author.component.css',
 })
 export class CreateAuthorComponent {
   @Output() authorSaved = new EventEmitter<Author>();

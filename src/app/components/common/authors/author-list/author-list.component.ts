@@ -28,7 +28,7 @@ interface FilteredAuthorSearchResult {
   selector: 'l-author-list',
   imports: [PaginatorModule, TableModule, ButtonModule, ButtonGroupModule, AsyncPipe],
   templateUrl: './author-list.component.html',
-  styleUrl: './author-list.component.scss',
+  styleUrl: './author-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorListComponent implements OnChanges {

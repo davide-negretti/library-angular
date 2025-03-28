@@ -9,7 +9,7 @@ import { AuthorsToolbarComponent } from '../common/authors/authors-toolbar/autho
     AuthorsToolbarComponent,
   ],
   templateUrl: './authors.component.html',
-  styleUrl: './authors.component.scss',
+  styleUrl: './authors.component.css',
 })
 export class AuthorsComponent {
   private readonly router = inject(Router);

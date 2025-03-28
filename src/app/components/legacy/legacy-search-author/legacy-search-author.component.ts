@@ -30,7 +30,7 @@ interface LoadedData {
     Tooltip,
   ],
   templateUrl: './legacy-search-author.component.html',
-  styleUrl: './legacy-search-author.component.scss',
+  styleUrl: './legacy-search-author.component.css',
 })
 export class LegacySearchAuthorComponent {
   service = inject(AuthorService);

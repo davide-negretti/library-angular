@@ -25,7 +25,7 @@ Search > Review > Confirm
     CreateAuthorComponent,
   ],
   templateUrl: './legacy-select-author.component.html',
-  styleUrl: './legacy-select-author.component.scss',
+  styleUrl: './legacy-select-author.component.css',
 })
 export class LegacySelectAuthorComponent {
   step = signal(SelectAuthorStep.SEARCH);
