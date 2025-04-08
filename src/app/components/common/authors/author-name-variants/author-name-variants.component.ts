@@ -37,7 +37,7 @@ import { NotificationService } from '../../../../services/ui/notification.servic
     Tooltip,
   ],
   templateUrl: './author-name-variants.component.html',
-  styleUrl: './author-name-variants.component.scss',
+  styleUrl: './author-name-variants.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorNameVariantsComponent {

@@ -13,7 +13,7 @@ import { HeaderComponent } from './components/header/header.component';
     Toast,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
 

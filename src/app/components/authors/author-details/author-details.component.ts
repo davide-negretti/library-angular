@@ -11,7 +11,7 @@ import { AuthorNameVariantsComponent } from '../../common/authors/author-name-va
     PanelModule,
   ],
   templateUrl: './author-details.component.html',
-  styleUrl: './author-details.component.scss',
+  styleUrl: './author-details.component.css',
 })
 export class AuthorDetailsComponent {
   service = inject(AuthorService);

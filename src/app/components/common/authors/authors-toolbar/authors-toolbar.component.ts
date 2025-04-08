@@ -19,7 +19,7 @@ import { Toolbar } from 'primeng/toolbar';
     Toolbar,
   ],
   templateUrl: './authors-toolbar.component.html',
-  styleUrl: './authors-toolbar.component.scss',
+  styleUrl: './authors-toolbar.component.css',
 })
 export class AuthorsToolbarComponent {
   @Output() searchQuery = new EventEmitter<string>();

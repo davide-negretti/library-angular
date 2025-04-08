@@ -8,7 +8,7 @@ import { AuthorListComponent } from '../../common/authors/author-list/author-lis
     AuthorListComponent,
   ],
   templateUrl: './all-authors.component.html',
-  styleUrl: './all-authors.component.scss',
+  styleUrl: './all-authors.component.css',
 })
 export class AllAuthorsComponent {
   readonly query = input<string>(); // from query parameter
